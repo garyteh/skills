@@ -1,0 +1,44 @@
+# Configuration for the `summarise` skill.
+# Holds the output settings the gate script and the rubric both read, and
+# nothing else. Every value is usable as shipped: who the reader is, which
+# systems hold the source, the language variant and the timezone all resolve at
+# run time, so there is nothing here to fill in before first use.
+
+diagrams:
+  # C4 levels the reader wants by default. Context is reserved for deliberate
+  # cross-system-boundary docs.
+  preferred_c4_levels:
+    - "Container"
+    - "Component"
+  # Diagram types drawn only when the reader names them in the request, because
+  # they sit below the altitude the reader works at. The A6 gate rejects them
+  # otherwise.
+  on_request_only:
+    - "class"
+    - "C4 level 4"
+
+gates:
+  # Most bold spans allowed in a brief, emphasis only. Past this, bold stops
+  # marking anything out. Enforced by gate A3. The mandated diagram label and the
+  # mandated "Your move:" label are structural rather than emphasis, so neither
+  # counts against this.
+  bold_span_budget: 5
+  # Content-word overlap at which the script calls 2 statements a restatement.
+  # Set high so it reports duplication rather than mere topical similarity. The
+  # script reads this value; its command-line flag overrides it for one run.
+  restatement_threshold: "0.65"
+  # Most times the Step 5 script runs before the brief ships with a disclosure.
+  # Each finding is a typo-class defect with an unambiguous repair, so a loop
+  # that has not converged by the cap is not going to.
+  max_script_attempts: 5
+  # Most part B gates a Reflexion draft may fail and still ship. A count rather
+  # than a score, because a score derived from the gate total silently changes
+  # meaning every time a gate is added. 2 across 14 gates is a deliberately
+  # tight bar, because each gate targets a failure seen in a real run rather
+  # than a hypothetical one. Raise this, or raise max_revision_rounds, if drafts
+  # start shipping with the disclosure line attached.
+  max_gate_failures: 2
+  # Most revision rounds the Reflexion loop runs before shipping the best draft
+  # with a disclosure line. Past this the loop stops converging and starts
+  # trading one failure for another.
+  max_revision_rounds: 2

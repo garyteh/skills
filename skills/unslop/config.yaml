@@ -1,0 +1,21 @@
+# Configuration for the `unslop` skill.
+# Holds the values an adopter changes on day one, and nothing else. Every value
+# is usable as shipped, so there is nothing here to fill in before first use.
+
+# Spelling variant the rewrite normalises to. The strip pass leaves word choice
+# alone but standardises spelling, so a draft mixing organise and organize comes
+# back consistent. Set this to the variant the reader's org writes in.
+locale: "en-AU"
+
+# Most words a single broadcast block may run to before it stops being read.
+# Applies to register D only; a formal doc has no cap and a quick reply never
+# approaches one. Raise it if the reader's channels tolerate longer posts.
+broadcast_word_cap: 120
+
+# Terms that stay literal even though they appear on the abstract-metaphor-noun
+# list, because in the reader's domain they name a real thing rather than
+# gesturing at one. Empty by default, because the ban is the safe position and a
+# term should earn its exemption. Add to this rather than weakening the ban.
+# Terms that commonly earn it are "harness" for the tooling layer around a
+# coding agent, and "primitive" in a type-system context.
+literal_terms: []

@@ -1,0 +1,20 @@
+# Extended regular expressions that must not appear in a skill body.
+# Case-insensitive. Blank lines and # comments are ignored.
+# One pattern per line. The matched text is quoted back in the failure.
+
+# Migration archaeology
+this is a rebuild
+previous(ly)? (design|version|implementation|approach)
+(an|the) earlier version
+formerly
+no longer
+used to be
+deprecated
+
+# Dated provenance
+confirmed on
+last verified
+tuned through dry runs
+reviewed real samples
+as of [0-9]{4}
+[0-9]{4}-[0-9]{2}-[0-9]{2}

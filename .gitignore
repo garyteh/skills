@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+build/
+
+# Worktrees are scratch checkouts of this repo. The commits live in git, so the
+# directories are disposable and never belong in a commit.
+.claude/worktrees/
+
+# A global ignore pattern excludes any directory named scripts/, and another
+# excludes /Makefile. Both are this repo's own tooling, and a skill's bundled
+# scripts are part of the skill, so re-include them here: without this,
+# committing drops the validator and the scripts a skill executes.
+!scripts/
+!Makefile

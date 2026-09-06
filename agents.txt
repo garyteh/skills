@@ -1,0 +1,18 @@
+# Install targets for scripts/install.sh, one agent id per line.
+# Ids come from the skills CLI: npx skills add --help
+# Blank lines and # comments are ignored.
+
+amp
+antigravity
+antigravity-cli
+claude-code
+cline
+codex
+cursor
+deepagents
+gemini-cli
+github-copilot
+kimi-code-cli
+opencode
+warp
+zed

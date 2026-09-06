@@ -1,0 +1,14 @@
+# Extended regular expressions that earn a warning, not a failure.
+# Case-insensitive. Blank lines and # comments are ignored.
+
+# Clock times and cadence belong to whatever schedules the skill
+every [0-9]+ (second|minute|hour|day|week)s?
+daily at
+hourly
+nightly
+[0-9]{1,2}:[0-9]{2} ?(am|pm)
+
+# Harness-specific tool names break portability
+the (Grep|Glob|Read|Write|Edit|Bash|Task|WebFetch|WebSearch) tool
+slash command
+subagent
