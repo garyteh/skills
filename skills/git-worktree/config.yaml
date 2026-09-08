@@ -1,0 +1,24 @@
+# Configuration for the `git-worktree` skill.
+# Holds the values an adopter changes on day one, and nothing else. Every value
+# is usable as shipped, so there is nothing here to fill in before first use.
+
+# Remote holding the shared history. Every command in the skill reads this
+# rather than assuming a name, because a repository with two remotes has one
+# that is safe to push to and one that is not.
+remote: "origin"
+
+# Default branch to treat as the trunk. Empty means detect it from the remote,
+# which is the right answer for almost every repository. Set it only where
+# detection cannot reach the remote, or where the trunk is deliberately not the
+# branch the remote points its HEAD at.
+default_branch: ""
+
+# Where new worktrees are created, relative to the repository root. A sibling
+# directory keeps them out of the repository's own file tree, so they never
+# show up as untracked files or get swept into a build.
+worktree_root: ".."
+
+# Prefix put in front of every branch name this skill creates, as in
+# "yourname/". Empty by default. Set it where the remote sorts branches by
+# owner, or where a naming convention is enforced.
+branch_prefix: ""

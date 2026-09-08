@@ -1,0 +1,14 @@
+# Configuration for the `git-solo-trunk` skill.
+# Holds the values an adopter changes on day one, and nothing else. Every value
+# is usable as shipped, so there is nothing here to fill in before first use.
+
+# Remote holding the shared history. Every command in the skill reads this
+# rather than assuming a name, because a repository with two remotes has one
+# that is safe to push to and one that is not.
+remote: "origin"
+
+# Default branch to treat as the trunk. Empty means detect it from the remote,
+# which is the right answer for almost every repository. Set it only where
+# detection cannot reach the remote, or where the trunk is deliberately not the
+# branch the remote points its HEAD at.
+default_branch: ""
