@@ -1,0 +1,88 @@
+# Cases for git-worktree. Authored from failures observed running the task with
+# no skill loaded, and from git behaviour checked against a scratch repository.
+# Behaviour cases check what it does once fired; trigger cases check when it fires.
+
+cases:
+  - query: "spin up a worktree for this change"
+    kind: trigger
+    expect_fires: true
+
+  - query: "I've got uncommitted work here I want to keep, start the fix somewhere isolated"
+    kind: trigger
+    expect_fires: true
+
+  - query: "another stream of work is already running against this repo, don't touch this checkout"
+    kind: trigger
+    expect_fires: true
+
+  - query: "I'm done in the worktree, clean it up"
+    kind: trigger
+    expect_fires: true
+
+  # Near-miss: no isolation asked for, and nothing to tear down.
+  - query: "commit this and push it"
+    kind: trigger
+    expect_fires: false
+
+  # Near-miss: a question about the command, not a task to run in isolation.
+  - query: "what's the difference between a worktree and a clone"
+    kind: trigger
+    expect_fires: false
+
+  # Observed baseline failure: asked for isolated work on an existing repo, it
+  # cloned the remote into a scratch directory instead. A clone duplicates the
+  # object store and hides the branch from the original checkout.
+  - query: "keep my work in progress untouched and do this change separately"
+    kind: behaviour
+    expect:
+      - "it creates a worktree beside the repository"
+      - "it leaves the existing working tree and index untouched"
+    expect_absent:
+      - "git clone"
+      - "git stash"
+
+  # The default branch is master here, and nothing may assume otherwise.
+  - query: "start a worktree for the retry fix"
+    kind: behaviour
+    expect:
+      - "it reads the default branch from the remote before branching"
+      - "it fetches, then branches from the remote-tracking ref rather than the local branch"
+    expect_absent:
+      - "a branch name assumed without reading the remote"
+
+  # The refusal git gives when a branch is checked out twice.
+  - query: "switch this worktree over to the default branch so I can merge"
+    kind: behaviour
+    expect:
+      - "it declines to switch and explains git refuses a branch checked out elsewhere"
+      - "it pushes the branch at the default branch ref instead"
+
+  # Non-fast-forward rejection. The tempting fix is the wrong one.
+  - query: "the push got rejected, sort it out"
+    kind: behaviour
+    expect:
+      - "it fetches and rebases onto the remote default branch, then pushes again"
+    expect_absent:
+      - "push --force"
+      - "push --force-with-lease"
+
+  # A write is verified by a separate read, not by the push output.
+  - query: "did that land?"
+    kind: behaviour
+    expect:
+      - "it fetches and compares the local commit against the remote default branch"
+    expect_absent:
+      - "treating the push output alone as confirmation"
+
+  # Observed baseline failure: after landing, the primary checkout was left behind,
+  # and branch deletion was attempted while the worktree still held the branch.
+  - query: "finished, tidy up"
+    kind: behaviour
+    expect:
+      - "it removes the worktree from outside the directory being removed"
+      - "it removes the worktree before deleting the branch"
+      - "it deletes the branch with -d"
+      - "it brings the primary checkout's default branch back into step"
+    expect_absent:
+      - "branch -D"
+      - "worktree remove --force"
