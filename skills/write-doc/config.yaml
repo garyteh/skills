@@ -1,0 +1,203 @@
+# Configuration for the `write-doc` skill.
+# Holds the values an adopter changes on day one, and nothing else. Every value
+# is usable as shipped, so there is nothing here to fill in before first use.
+#
+# Who the reader is, the English variant and today's date are deliberately
+# absent. All 3 resolve from the run itself, and a second copy would be a stale
+# copy.
+
+# Subject areas where a wrong document is expensive to unwind. A draft touching
+# one of these carries a release plan, a test plan and a rollback as
+# obligations, whatever its intent. Written as categories rather than product
+# names, so the list works unedited. Replace them where yours are narrower.
+high_risk_domains:
+  - "anything that moves money"
+  - "anything that touches customer data"
+  - "anything user-facing that cannot be reverted"
+  - "anything that grants or removes access"
+
+drafts:
+  # Directory offered as the default when the author names no destination,
+  # relative to the working folder. The skill asks rather than assuming, so this
+  # is a suggestion and never a location it writes to unprompted.
+  suggested_directory: "drafts"
+  # Characters that break on Windows filesystems or sync tools. Substitute
+  # "and" or "-" as the content fits.
+  forbidden_filename_chars: '/\:|<>"?*'
+
+structure:
+  # Words a level 1 section may run to before it stops being a level 1 section.
+  # Roughly 45 seconds of reading, which is what an approver gives an opening.
+  level_1_max_words: 200
+
+rounds:
+  # Gaps raised per round. Above this the round reads as an interrogation and
+  # the author starts skimming, which defeats the strawman.
+  max_gaps_per_round: 5
+  # Gap rounds before drafting regardless. An imperfect draft the author reacts
+  # to beats a perfect interrogation they abandoned.
+  max_gap_rounds: 2
+  # Findings reported in one review pass. A 200-finding dump gets closed, not
+  # fixed.
+  max_findings_per_pass: 25
+  # Attempts at a self-healing fix loop before reporting the failure to the
+  # author instead. Past this the loop trades one failure for another.
+  max_fix_rounds: 3
+
+style:
+  # Average sentence length across the draft. Above 20 words, readability drops
+  # sharply for a cross-functional reader.
+  sentence_avg_max: 20
+  # No single sentence may exceed this. Past 30 words a sentence has to be
+  # re-read to parse, whatever its average neighbours look like.
+  sentence_hard_max: 30
+  # Bold span opening every top-level bullet in an argument doc, in words. Two
+  # to four words is what an eye-tracking scan actually lands on.
+  bullet_anchor_min_words: 2
+  bullet_anchor_max_words: 4
+  # Words one procedural step may run to. Past this the step is carrying a
+  # second action or an explanation.
+  max_words_per_step: 20
+  # Sentences the opening of a task doc may run to before it becomes
+  # throat-clearing.
+  max_intro_sentences: 2
+  # Prose sentences allowed between 2 numbered steps. More than this and the
+  # reader loses their place in the procedure.
+  max_prose_sentences_between_steps: 1
+  # Steps in one procedure before it needs splitting into sub-tasks.
+  max_steps_per_procedure: 9
+  # Content a brevity pass may never cut. These are the longest non-action
+  # content on a task page, so naive editing reaches for them first, and they
+  # are the only reason a stuck reader can diagnose themselves.
+  never_cut:
+    - "prerequisites"
+    - "verification of what the reader should see"
+    - "recovery instructions beside the step that fails"
+    - "the location that orients a step"
+  # Verbs a procedural step may open with. Input-neutral on purpose: "select"
+  # covers a mouse, a touchscreen and a keyboard, where "click" covers one.
+  step_verbs:
+    - select
+    - choose
+    - clear
+    - enter
+    - open
+    - close
+    - go
+    - turn
+    - move
+    - drag
+    - copy
+    - save
+    - run
+    - check
+    - wait
+    - repeat
+    - review
+    - confirm
+
+# Words a draft may never contain, split by reason because the repair differs.
+banned_words:
+  # Bloat with an exact plain-language replacement.
+  bloat:
+    utilise: "use"
+    utilize: "use"
+    leverage: "use"
+    "in order to": "to"
+    "due to the fact that": "because"
+    "in the event that": "if"
+    commence: "start"
+    ascertain: "find out"
+    terminate: "stop"
+    endeavour: "try"
+    "at this point in time": "now"
+    "a number of": "state the number"
+  # Filler that marks low-substance generated prose. No replacement. Cut the
+  # sentence, or say the specific thing instead.
+  slop:
+    - delve
+    - pivotal
+    - realm
+    - synergy
+    - seamlessly
+    - multifaceted
+    - "game-changer"
+    - "robust solution"
+    - "best-in-class"
+    - "it is important to note that"
+    - "serves as"
+    - "stands as"
+    - boasts
+  # Words that mask complexity and alienate a reader who hits a snag. Remove
+  # them rather than replacing them.
+  minimisers:
+    - simply
+    - obviously
+    - "of course"
+    - merely
+    - trivially
+    - "needless to say"
+  # The extra minimisers a task doc bans. A reader stuck on a step labelled
+  # "easy" concludes the problem is them, and that is when they stop trusting
+  # the page. "just" sits here rather than above because in argument prose it
+  # reads as "only" far more often than as a minimiser.
+  minimisers_task:
+    - easy
+    - easily
+    - quick
+    - quickly
+    - just
+    - "all you need to do"
+    - "it is that simple"
+  # Closings that add nothing and mark a draft as machine-written. End on the
+  # ask, or on nothing.
+  warm_closers:
+    - "see you out there"
+    - "happy to help"
+    - "let me know if"
+    - "feel free to"
+    - "hope this helps"
+    - "thanks in advance"
+
+gates:
+  # Acronyms any reader is assumed to hold, so the expansion gate skips them.
+  # Anything not listed is expanded on first use.
+  acronym_allowlist:
+    - API
+    - CPU
+    - CSV
+    - DB
+    - GDPR
+    - HTTP
+    - HTTPS
+    - ID
+    - JSON
+    - PR
+    - QA
+    - SDK
+    - SLA
+    - SLO
+    - SQL
+    - TTL
+    - URL
+    - UTC
+    - UI
+    - UX
+    - YAML
+    - OK
+    - TODO
+    - FAQ
+    - AM
+    - PM
+    - AI
+  # Most bold spans allowed in an argument doc outside bullet anchors and
+  # structural labels. Past this, bold stops marking anything out.
+  bold_span_budget: 8
+
+handoff:
+  # Skill that rewrites a finished draft into the author's voice, or strips the
+  # machine-written tells a drafting pass cannot reach. Install-specific, so it
+  # is named here rather than in the skill body, and empty is a complete
+  # configuration rather than a degraded one: the drafting rules already cover
+  # the tells a draft can control, and Step 7 simply offers no follow-up pass.
+  voice_pass: ""
