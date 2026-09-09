@@ -1,6 +1,6 @@
 ---
 name: skill-author
-description: Writes, revises and audits portable agent skills that run unmodified on Claude Code, Codex, Cursor, opencode, Copilot and other harnesses. Use when creating a new skill, editing an existing SKILL.md, splitting a skill into references, writing eval cases for one, or checking one for cross-harness portability.
+description: Writes and audits portable agent skills that run unmodified on Claude Code, Codex, Cursor, opencode, Copilot and other harnesses. Use when creating a new skill, splitting a skill into references, writing eval cases for one, or checking one for cross-harness portability.
 ---
 
 # Skill author
