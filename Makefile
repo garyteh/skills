@@ -1,8 +1,9 @@
 .POSIX:
-.PHONY: help validate install uninstall pack new
+.PHONY: help validate test-hooks install uninstall pack new
 
 help:
 	@echo "validate           lint every skill against AGENTS.md"
+	@echo "test-hooks         run the hook gates against fixture payloads"
 	@echo "install            install every skill into every agent in agents.txt"
 	@echo "install name=<x>   install just skills/<x>"
 	@echo "uninstall          remove every skill this repo defines, from every agent"
@@ -13,6 +14,9 @@ help:
 
 validate:
 	@sh scripts/validate.sh
+
+test-hooks:
+	@sh scripts/test-hooks.sh
 
 install:
 	@test -z "$(name)" || test -d "skills/$(name)" || \

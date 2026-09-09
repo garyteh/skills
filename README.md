@@ -11,8 +11,14 @@ AGENTS.md                the contract
 CLAUDE.md                symlink -> AGENTS.md
 agents.txt               install targets, one agent id per line
 Makefile                 validate / install / uninstall / new
+hooks/
+  require-worktree.sh    gate: the primary checkout is not for editing
+  require-trunk-landing.sh  gate: land through the documented procedure
+.claude/settings.json    hook wiring for Claude Code
+.codex/hooks.json        hook wiring for Codex CLI
 scripts/
   validate.sh            the linter
+  test-hooks.sh          fixture tests for the gates
   install.sh             reads agents.txt, drives the skills CLI
   uninstall.sh           removes this repo's skills from every agent
   pack.sh                zips a skill for a Cowork upload
@@ -76,6 +82,42 @@ make install name=my-skill
 ```
 
 Same store, same symlinks, one skill. Fails if `skills/my-skill` does not exist, because the CLI would otherwise install nothing and exit 0.
+
+## Hooks
+
+Skills are model-invoked, so a description is a suggestion the router may
+decline. Two `PreToolUse` gates make the git workflow non-optional instead.
+
+- `hooks/require-worktree.sh` denies a write issued from the primary checkout
+  and points at the `git-worktree` skill. It allows inside a linked worktree,
+  detected by `git rev-parse --git-common-dir`, so it cannot block the worktree
+  it just asked for.
+- `hooks/require-trunk-landing.sh` denies an ad hoc `git commit` or `git push`
+  and points at the `git-solo-trunk` skill.
+
+Each denial names its escape: re-run with `WORKTREE_GATE=off` or
+`TRUNK_GATE=off` in front of the command. Those are speed bumps rather than
+controls. They exist so the skill is the path of least resistance, and so the
+skills' own commands are not blocked by the gate that names them.
+
+The scripts are portable; only the wiring differs. `.claude/settings.json` and
+`.codex/hooks.json` carry the same events, matchers and commands, because both
+harnesses call the shell tool `Bash`, alias their edit tools to `Edit`/`Write`,
+put the command at `.tool_input.command` on stdin, and block on
+`permissionDecision: "deny"`. Codex runs project-layer hooks only once the
+project is trusted.
+
+Neither skill depends on its gate. Both have to run unmodified where no hooks
+exist, so all the coupling lives in the hook — which means a skill rename has
+to update the deny message that names it.
+
+```sh
+make test-hooks
+```
+
+Feeds fixture payloads to each script and asserts the decision. Every case runs
+twice, once with `jq` on `PATH` and once without, because the scripts carry a
+`sed` fallback and an untested fallback is one that has already broken.
 
 ## Uninstall
 

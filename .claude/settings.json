@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"$(git rev-parse --show-toplevel)/hooks/require-worktree.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"$(git rev-parse --show-toplevel)/hooks/require-worktree.sh\""
+          },
+          {
+            "type": "command",
+            "command": "sh \"$(git rev-parse --show-toplevel)/hooks/require-trunk-landing.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}

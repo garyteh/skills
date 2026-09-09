@@ -357,6 +357,13 @@ for s in "$script_dir"/*.sh; do
     check_shell_script "$s"
 done
 
+# Hooks are this repository's harness layer rather than part of a skill, but
+# they are shipped shell and are held to the same POSIX rules.
+for s in "$repo_root"/hooks/*.sh; do
+    [ -f "$s" ] || continue
+    check_shell_script "$s"
+done
+
 printf '\n%s skill(s) checked, %s failure(s), %s warning(s)\n' \
     "$(count checked)" "$(count fail)" "$(count warn)"
 
