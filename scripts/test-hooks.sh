@@ -108,6 +108,10 @@ check require-worktree.sh allow "redirect into tmp in primary" \
     "$(payload Bash "$primary" 'echo hi > /tmp/scratch.txt')"
 check require-worktree.sh allow "escape hatch honoured" \
     "$(payload Bash "$primary" 'WORKTREE_GATE=off sed -i s/a/b/ file.txt')"
+check require-worktree.sh allow "escape hatch after another assignment" \
+    "$(payload Bash "$primary" 'TRUNK_GATE=off WORKTREE_GATE=off sed -i s/a/b/ f.txt')"
+check require-worktree.sh deny "escape hatch named inside a write" \
+    "$(payload Bash "$primary" 'echo WORKTREE_GATE=off > notes.txt')"
 check require-worktree.sh allow "outside any repository" \
     "$(payload Edit "$tmp" '')"
 check require-worktree.sh deny "Write into the primary checkout" \
@@ -126,6 +130,8 @@ check require-trunk-landing.sh deny "git commit" \
     "$(payload Bash "$primary" 'git commit -m wip')"
 check require-trunk-landing.sh allow "escape hatch honoured" \
     "$(payload Bash "$primary" 'TRUNK_GATE=off git push origin HEAD:master')"
+check require-trunk-landing.sh deny "escape hatch named inside the command" \
+    "$(payload Bash "$primary" 'git commit -m TRUNK_GATE=off')"
 check require-trunk-landing.sh allow "not a shell call" \
     "$(payload Edit "$primary" '')"
 

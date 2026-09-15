@@ -33,6 +33,28 @@ deny() {
     exit 0
 }
 
+# True where the gate variable is set to off as an environment prefix, before
+# the command word. Matched anywhere in the string instead, a quoted mention
+# inside a real write turns the gate off.
+gate_off_prefix() {
+    _rest=$1
+    while :; do
+        case "$_rest" in
+            " "*) _rest=${_rest# }; continue ;;
+        esac
+        _word=${_rest%% *}
+        case "$_word" in
+            "$2") return 0 ;;
+            *=*) ;;
+            *) return 1 ;;
+        esac
+        case "$_rest" in
+            *" "*) _rest=${_rest#* } ;;
+            *) return 1 ;;
+        esac
+    done
+}
+
 tool=$(field '.tool_name' 'tool_name')
 cmd=$(field '.tool_input.command' 'command')
 
@@ -41,9 +63,7 @@ cmd=$(field '.tool_input.command' 'command')
 # Escape hatch, as an environment prefix on the command or in the hook's own
 # environment.
 [ "${TRUNK_GATE:-}" = "off" ] && exit 0
-case "$cmd" in
-    *TRUNK_GATE=off*) exit 0 ;;
-esac
+gate_off_prefix "$cmd" "TRUNK_GATE=off" && exit 0
 
 case "$cmd" in
     *"git commit"*|*"git push"*) ;;

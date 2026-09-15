@@ -36,6 +36,28 @@ deny() {
     exit 0
 }
 
+# True where the gate variable is set to off as an environment prefix, before
+# the command word. Matched anywhere in the string instead, a quoted mention
+# inside a real write turns the gate off.
+gate_off_prefix() {
+    _rest=$1
+    while :; do
+        case "$_rest" in
+            " "*) _rest=${_rest# }; continue ;;
+        esac
+        _word=${_rest%% *}
+        case "$_word" in
+            "$2") return 0 ;;
+            *=*) ;;
+            *) return 1 ;;
+        esac
+        case "$_rest" in
+            *" "*) _rest=${_rest#* } ;;
+            *) return 1 ;;
+        esac
+    done
+}
+
 tool=$(field '.tool_name' 'tool_name')
 cmd=$(field '.tool_input.command' 'command')
 cwd=$(field '.cwd' 'cwd')
@@ -43,9 +65,7 @@ cwd=$(field '.cwd' 'cwd')
 # Escape hatch, as an environment prefix on the command or in the hook's own
 # environment.
 [ "${WORKTREE_GATE:-}" = "off" ] && exit 0
-case "$cmd" in
-    *WORKTREE_GATE=off*) exit 0 ;;
-esac
+gate_off_prefix "$cmd" "WORKTREE_GATE=off" && exit 0
 
 [ -n "$cwd" ] && [ -d "$cwd" ] && cd "$cwd" 2>/dev/null
 
