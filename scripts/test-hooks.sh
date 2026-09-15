@@ -78,6 +78,13 @@ payload() {
         "$1" "$2" "$3"
 }
 
+# An edit payload carrying the path it would write, which is what decides
+# whether the write lands inside this checkout.
+file_payload() {
+    printf '{"tool_name":"%s","cwd":"%s","tool_input":{"file_path":"%s"}}' \
+        "$1" "$2" "$3"
+}
+
 # require-worktree.sh
 check require-worktree.sh allow "read-only command in primary" \
     "$(payload Bash "$primary" 'ls -la')"
@@ -95,6 +102,12 @@ check require-worktree.sh allow "escape hatch honoured" \
     "$(payload Bash "$primary" 'WORKTREE_GATE=off sed -i s/a/b/ file.txt')"
 check require-worktree.sh allow "outside any repository" \
     "$(payload Edit "$tmp" '')"
+check require-worktree.sh deny "Write into the primary checkout" \
+    "$(file_payload Write "$primary" "$primary/notes.md")"
+check require-worktree.sh allow "Write to a path outside the repository" \
+    "$(file_payload Write "$primary" "$tmp/outside.md")"
+check require-worktree.sh allow "Write to an absolute path elsewhere" \
+    "$(file_payload Write "$primary" '/tmp/scratch-note.md')"
 
 # require-trunk-landing.sh
 check require-trunk-landing.sh allow "unrelated command" \

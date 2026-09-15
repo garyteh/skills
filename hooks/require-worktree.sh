@@ -58,7 +58,37 @@ git_common=$(git rev-parse --git-common-dir 2>/dev/null) || exit 0
 
 writes=0
 case "$tool" in
-    Edit|Write|NotebookEdit|apply_patch) writes=1 ;;
+    Edit|Write|NotebookEdit|apply_patch)
+        writes=1
+        # A write landing outside this checkout is not what the gate is for.
+        # Scratch files, notes and plans live elsewhere and isolating them
+        # buys nothing. A path the payload does not carry stays denied,
+        # because the gate cannot tell where the write would land.
+        target=$(field '.tool_input.file_path' 'file_path')
+        if [ -n "$target" ]; then
+            case "$target" in
+                /*) target_abs=$target ;;
+                *)  target_abs=$PWD/$target ;;
+            esac
+            # Strip the filename with parameter expansion rather than
+            # dirname, which is one more binary to depend on.
+            target_dir=${target_abs%/*}
+            [ -n "$target_dir" ] || target_dir=/
+            # Compare both sides as physical paths. A temp directory or a
+            # home directory reached through a symlink spells one location
+            # two ways, and a textual prefix test reads that as outside.
+            resolved=$(CDPATH= cd -- "$target_dir" 2>/dev/null && pwd -P) &&
+                target_dir=$resolved
+            top=$(git rev-parse --show-toplevel 2>/dev/null) || top=
+            if [ -n "$top" ]; then
+                resolved=$(CDPATH= cd -- "$top" 2>/dev/null && pwd -P) && top=$resolved
+                case "$target_dir/" in
+                    "$top"/*) : ;;
+                    *) writes=0 ;;
+                esac
+            fi
+        fi
+        ;;
     Bash)
         case "$cmd" in
             *"sed -i"*|*"perl -i"*|*tee\ *|*"dd of="*|*truncate\ *|\
