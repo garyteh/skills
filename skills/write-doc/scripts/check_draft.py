@@ -59,6 +59,21 @@ DEFAULT_BLOAT = {
     "terminate": "stop", "endeavour": "try", "at this point in time": "now",
     "a number of": "state the number",
 }
+# Officialese with an everyday equivalent. Words with a common literal sense are
+# deliberately absent: a gate that fails a correct draft gets turned off.
+DEFAULT_PLAIN_ENGLISH = {
+    "facilitate": "run, or help", "initiate": "start", "liaise": "work with",
+    "robust": "well tested", "streamline": "simplify",
+    "going forward": "from now on", "purchase": "buy", "assist": "help",
+    "approximately": "about", "move the needle": "name the metric",
+    "double down": "say what increases",
+}
+DEFAULT_INCLUSIVE = {
+    "whitelist": "allowlist", "whitelisted": "allowlisted",
+    "blacklist": "blocklist", "blacklisted": "blocklisted",
+    "sanity check": "quick check", "dummy": "placeholder", "guys": "everyone",
+    "he or she": "they", "his or her": "their",
+}
 DEFAULT_SLOP = (
     "delve", "pivotal", "realm", "synergy", "seamlessly", "multifaceted",
     "game-changer", "robust solution", "best-in-class",
@@ -114,6 +129,10 @@ SOFT_MARKER = re.compile(r"\((assumption|gap|inferred|retrieved)", re.I)
 HTML_TAG = re.compile(r"<(?!!--)/?[a-zA-Z][^>]*>")
 
 LONG_DASH = re.compile(r"[—–]")
+SEMICOLON = re.compile(r";")
+# Both spellings, because a draft carries the character and a typed draft
+# carries the 3 dots.
+ELLIPSIS = re.compile(r"…|\.\.\.")
 INLINE_CODE = re.compile(r"`[^`]*`")
 URL = re.compile(r"https?://\S+")
 BOLD_SPAN = re.compile(r"\*\*[^*]+\*\*")
@@ -149,7 +168,14 @@ BAD_LINK_TEXT = re.compile(
     r"\[\s*(click here|here|this page|read more|this document|link|more)\s*\]",
     re.I)
 BARE_URL_LINK = re.compile(r"\[\s*https?://")
-GERUND_HEADING = re.compile(r"^(how to\b|\w+ing\b)", re.I)
+# A task heading is a bare infinitive, so a gerund opening one is the failure.
+# The stem runs to 4 characters or more, which drops "Bring", "During" and
+# "String", and the set below drops the longer words that merely end in "ing".
+GERUND_HEADING = re.compile(r"^(how to\b|\w{4,}ing\b)", re.I)
+NON_GERUND = frozenset((
+    "nothing", "anything", "something", "everything", "morning", "evening",
+    "warning", "ceiling", "sibling", "being",
+))
 THROAT_CLEARING = re.compile(
     r"\b(this document describes|in this guide we will|before we begin"
     r"|this page is intended to|as you may know"
@@ -386,11 +412,11 @@ def gate_sentences(sents, avg_max, hard_max) -> Gate:
     return Gate("G1", "sentence length", not evidence, evidence)
 
 
-def gate_banned(prose, bloat, slop, minimisers, closers) -> Gate:
+def gate_banned(prose, swaps, slop, minimisers, closers) -> Gate:
     evidence = []
     for n, line in prose:
         low = visible_text(line).lower()
-        for term, repl in bloat.items():
+        for term, repl in swaps.items():
             if re.search(rf"\b{re.escape(term)}\b", low):
                 evidence.append(f"line {n}: '{term}', use '{repl}'")
         for term in slop:
@@ -472,6 +498,10 @@ def gate_punctuation(prose) -> Gate:
         text = visible_text(text)
         if LONG_DASH.search(text):
             evidence.append(f"line {n}: long dash, rewrite as 2 sentences")
+        if SEMICOLON.search(text):
+            evidence.append(f"line {n}: semicolon, rewrite as 2 sentences")
+        if ELLIPSIS.search(text):
+            evidence.append(f"line {n}: ellipsis, finish the sentence")
         stripped = BOLD_LABEL.sub(" ", text)
         stripped = CLOCK_TIME.sub(" ", stripped)
         stripped = re.sub(r"^\s*(?:[-*+]|\d+\.)\s+", "", stripped)
@@ -681,7 +711,7 @@ def gate_task_headings(headings) -> Gate:
     evidence = []
     for n, level, text in headings:
         m = GERUND_HEADING.match(text)
-        if m:
+        if m and m.group(0).lower() not in NON_GERUND:
             evidence.append(f"line {n}: '{text}' is not a bare infinitive, "
                             f"write 'Create a rule' rather than '{m.group(0)}...'")
     return Gate("T7", "task heading form", not evidence, evidence)
@@ -715,12 +745,23 @@ def gate_pretend_headings(prose) -> Gate:
 
 
 def gate_required_sections(headings, prose) -> Gate:
+    """Prerequisites and verification are 2 independent blockers.
+
+    A gap marker excuses the obligation it names and no other, so a marked
+    prerequisites gap cannot also suppress a missing verification section.
+    """
     texts = [t for _, _, t in headings]
-    marked = any(SOFT_MARKER.search(line) for _, line in prose)
+
+    def marked_as_gap(topic) -> bool:
+        return any(SOFT_MARKER.search(line) and topic.search(line)
+                   for _, line in prose)
+
     evidence = []
-    if not any(PREREQ_HEADING.search(t) for t in texts) and not marked:
+    if (not any(PREREQ_HEADING.search(t) for t in texts)
+            and not marked_as_gap(PREREQ_HEADING)):
         evidence.append("no prerequisites section, and nothing marks it as a gap")
-    if not any(VERIFY_HEADING.search(t) for t in texts) and not marked:
+    if (not any(VERIFY_HEADING.search(t) for t in texts)
+            and not marked_as_gap(VERIFY_HEADING)):
         evidence.append("nothing tells the reader how to check it worked, and "
                         "nothing marks it as a gap")
     return Gate("T12", "required sections", not evidence, evidence)
@@ -796,7 +837,12 @@ def main() -> int:
                           DEFAULT_PROSE_BETWEEN_STEPS)
     budget = cfg_num(cfg, "gates", "bold_span_budget", DEFAULT_BOLD_BUDGET)
 
-    bloat = cfg_map(cfg, "banned_words", "bloat", DEFAULT_BLOAT)
+    # Three config keys, split by the reason a reader would give for the swap,
+    # and one map here because the repair is the same: use the other word.
+    swaps = dict(cfg_map(cfg, "banned_words", "bloat", DEFAULT_BLOAT))
+    swaps.update(cfg_map(cfg, "banned_words", "plain_english",
+                         DEFAULT_PLAIN_ENGLISH))
+    swaps.update(cfg_map(cfg, "banned_words", "inclusive", DEFAULT_INCLUSIVE))
     slop = cfg_list(cfg, "banned_words", "slop", DEFAULT_SLOP)
     minimisers = list(cfg_list(cfg, "banned_words", "minimisers",
                                DEFAULT_MINIMISERS))
@@ -824,7 +870,7 @@ def main() -> int:
 
     gates = [
         gate_sentences(sents, avg_max, hard_max),
-        gate_banned(prose, bloat, slop, minimisers, closers),
+        gate_banned(prose, swaps, slop, minimisers, closers),
         gate_numerals(prose),
         gate_acronyms(prose, allowed),
         gate_headings(headings),

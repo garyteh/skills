@@ -29,6 +29,7 @@ say why. Do not pad a section to fill the outline.
 <One sentence: the outcome the reader gets.>
 <One sentence: when someone needs this.>
 
+**How long it takes:** <realistic estimate>
 **Owner:** <role> · **Last reviewed:** <date>
 
 ## Before you start
@@ -47,7 +48,18 @@ say why. Do not pad a section to fill the outline.
 ## If something goes wrong
 
 **<Symptom>.** <Cause, then fix.>
+
+## Related
+
+<Links the reader may want next. Never a link they need to finish this task.>
 ```
+
+**How long it takes is a decision, not decoration.** A reader who knows the task runs 20
+minutes does not start it with 5 to spare, then abandon it half done.
+
+**`## Related` never carries a link the reader needs.** Anything required to finish
+belongs on this page, so a required link here is a self-containment failure wearing a
+different heading. Drop the section where nothing genuinely comes next.
 
 **The opening is capped** at `style.max_intro_sentences` sentences. Lead with the outcome,
 then say when someone needs this, then stop. No background, no scope statement, no what
@@ -119,7 +131,20 @@ could plausibly get it wrong, and say what happens and what to do. Where a step 
 irreversible or expensive, warn before it, once.
 
 Readers skip boxes and callouts, so anything required to succeed belongs in the step flow
-itself. A page with 6 warnings has none, because the reader has stopped seeing them.
+itself. A page with 6 warnings has none, because the reader has stopped seeing them. Four
+things therefore never go in a box:
+
+- **A prerequisite.** It goes before step 1, where the reader can still act on it.
+- **A step.** A reader scanning for their next action does not read beside the flow.
+- **An expected result.** It belongs in the step's own paragraph, straight after the
+  action, because that is where the reader looks to check themselves.
+- **A second box touching the first.** A note stacked on a warning means the section needs
+  reorganising, not another box.
+
+Collapsed content follows the same rule for the same reason: it is for what a reader
+consults, such as a long output sample or a full field reference, never for a step, a
+prerequisite or a verification. When unsure whether something is a box, write it as
+ordinary text and see whether it needed one.
 
 ## 5. Naming what is on screen
 
@@ -163,6 +188,12 @@ covers one. Never "click", "tap", "hit" or "swipe".
 - Do not number headings. A heading roughly every 3 to 5 paragraphs.
 - Every heading is answered by the first sentence under it.
 - Bold is never a substitute for a heading.
+- Headings are removable. Strip them out and the content still reads correctly. Where a
+  sentence only makes sense under its heading, rewrite the sentence.
+- Parallel in structure at one level. All task headings or all noun phrases, never a mix.
+
+**Restate the context under every new heading.** Readers arrive mid-page from search and
+did not read the section above. Naming the thing again costs 3 words and saves a scroll.
 
 ## 8. Lists
 
@@ -227,8 +258,9 @@ reversible, so use test data.
 
 A screenshot is a confirmation aid and the sanctioned replacement for directional
 language, never the only place something is stated. Where an image is needed and not
-available, leave a marked placeholder at the step that needs it and count them in the
-handoff, so the author knows how much work is waiting.
+available, leave `style.screenshot_placeholder` from `config.yaml` at the step that needs
+it, with the description filled in. Step 7 counts what is left, so the author knows how
+much work is waiting instead of hunting for it.
 
 Alt text is never omitted. Without it a screen reader reads the filename aloud. Keep it
 short, do not open with "image of", and give a screenshot that merely duplicates the step

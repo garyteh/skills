@@ -66,6 +66,11 @@ style:
   max_prose_sentences_between_steps: 1
   # Steps in one procedure before it needs splitting into sub-tasks.
   max_steps_per_procedure: 9
+  # Marker left where a task page needs an image nobody has captured yet. It
+  # sits in the reader's view until the author replaces it, so it is loud on
+  # purpose, and Step 7 counts what is left rather than leaving the author to
+  # find them.
+  screenshot_placeholder: "[SCREENSHOT: what it shows]"
   # Content a brevity pass may never cut. These are the longest non-action
   # content on a task page, so naive editing reaches for them first, and they
   # are the only reason a stuck reader can diagnose themselves.
@@ -112,6 +117,41 @@ banned_words:
     endeavour: "try"
     "at this point in time": "now"
     "a number of": "state the number"
+  # Officialese with an everyday equivalent. Separate from bloat because the
+  # reason differs: these are not padding, they are a register a reader outside
+  # the author's function has to translate.
+  #
+  # Words with a common literal sense are deliberately absent, because a gate
+  # that fails a correct draft gets turned off: "deliver" and "deploy" are
+  # exact in a release context, "impact" is an ordinary noun, "key" is a
+  # credential, and "transform" is what a pipeline does.
+  plain_english:
+    facilitate: "run, or help"
+    initiate: "start"
+    liaise: "work with"
+    robust: "well tested"
+    streamline: "simplify"
+    "going forward": "from now on"
+    purchase: "buy"
+    assist: "help"
+    approximately: "about"
+    # Metaphors mean nothing precise and slow a reader who has to unpack them.
+    # Only the unambiguous ones sit here: "drive" and "unlock" both have
+    # literal senses a technical page uses correctly.
+    "move the needle": "name the metric"
+    "double down": "say what increases"
+  # Exclusionary terms, each with a direct replacement. Verb and participle
+  # forms are listed out because the gate matches whole words.
+  inclusive:
+    whitelist: "allowlist"
+    whitelisted: "allowlisted"
+    blacklist: "blocklist"
+    blacklisted: "blocklisted"
+    "sanity check": "quick check"
+    dummy: "placeholder"
+    guys: "everyone"
+    "he or she": "they"
+    "his or her": "their"
   # Filler that marks low-substance generated prose. No replacement. Cut the
   # sentence, or say the specific thing instead.
   slop:

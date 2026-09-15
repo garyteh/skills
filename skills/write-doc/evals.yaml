@@ -187,9 +187,47 @@ cases:
     expect:
       - "the colon gate fails on the sentence only, not on either label"
 
+  - query: "[gate fixture] a semicolon and an ellipsis in prose, and a semicolon inside inline code and inside a URL"
+    kind: behaviour
+    expect:
+      - "the punctuation gate fails the 2 prose lines and names each by line number"
+      - "neither the code span nor the URL is read as prose"
+
   - query: "[gate fixture] a how-to graded with the task gate set"
     kind: behaviour
     expect:
       - "the bottom-line and bullet-anchor gates do not run at all"
       - "a bolded on-screen label is not read as a spelling error"
       - "the mandated Optional: step prefix does not trip the colon gate"
+
+  - query: "[gate fixture] a how-to marking its prerequisites as a gap and carrying no verification section"
+    kind: behaviour
+    expect:
+      - "the required-sections gate still fails on verification alone"
+      - "a marker against one obligation does not excuse the other"
+
+  - query: "[gate fixture] task headings reading Nothing happens next, Bring your own key and During the rollout"
+    kind: behaviour
+    expect:
+      - "the task heading gate passes all 3"
+      - "it still fails Creating a rule and Setting up dispatch"
+
+  - query: "[gate fixture] a draft carrying facilitate, going forward, whitelist and sanity check"
+    kind: behaviour
+    expect:
+      - "the banned-words gate names each one with the word to use instead"
+
+  # --- behaviour: the restored task rules -----------------------------------
+  - query: "write the how-to. put the edit-access requirement in a note beside step 4"
+    kind: behaviour
+    expect:
+      - "the prerequisite moves to Before you start rather than sitting in a box"
+      - "it says why, that readers skip boxes"
+    expect_absent:
+      - "> **Note:** You will need edit access"
+
+  - query: "write the how-to for creating a rule, I have no screenshots yet"
+    kind: behaviour
+    expect:
+      - "each image the page needs carries the configured placeholder marker at its step"
+      - "the handoff line states how many placeholders are outstanding"

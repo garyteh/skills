@@ -548,6 +548,10 @@ Reader cost: 640 words, 7 sections. The approver reads 2 of them, about 90 secon
 3 open assumptions, 1 gap inside a step.
 ```
 
+On a how-to, count the `style.screenshot_placeholder` markers left in the draft and add
+the number to that line. An author told "4 screenshots outstanding" knows what is left to
+do; one told nothing has to read the whole page to find out.
+
 No handoff while any finding lacks a disposition, or while a Blocker-class gap sits inside
 a step. Say which, and offer to resolve it now.
 
