@@ -65,7 +65,18 @@ cmd=$(field '.tool_input.command' 'command')
 [ "${TRUNK_GATE:-}" = "off" ] && exit 0
 gate_off_prefix "$cmd" "TRUNK_GATE=off" && exit 0
 
-case "$cmd" in
+# Strip quoted text before matching. A command that quotes the phrase is
+# talking about it rather than running it, and denying a read teaches you to
+# leave the gate off.
+if command -v sed >/dev/null 2>&1; then
+    bare=$(printf '%s' "$cmd" | sed -e "s/'[^']*'/Q/g" -e 's/"[^"]*"/Q/g')
+else
+    # Without sed the raw string stands. Denying a read costs less than
+    # missing a landing.
+    bare=$cmd
+fi
+
+case "$bare" in
     *"git commit"*|*"git push"*) ;;
     *) exit 0 ;;
 esac

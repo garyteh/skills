@@ -132,6 +132,12 @@ check require-trunk-landing.sh allow "escape hatch honoured" \
     "$(payload Bash "$primary" 'TRUNK_GATE=off git push origin HEAD:master')"
 check require-trunk-landing.sh deny "escape hatch named inside the command" \
     "$(payload Bash "$primary" 'git commit -m TRUNK_GATE=off')"
+check require-trunk-landing.sh allow "trigger quoted in a search" \
+    "$(payload Bash "$primary" "grep -rn 'git commit' README.md")"
+check require-trunk-landing.sh allow "trigger quoted in a log query" \
+    "$(payload Bash "$primary" "git log --grep='git push'")"
+check require-trunk-landing.sh deny "commit carrying a quoted message" \
+    "$(payload Bash "$primary" "git commit -m 'fix the thing'")"
 check require-trunk-landing.sh allow "not a shell call" \
     "$(payload Edit "$primary" '')"
 
