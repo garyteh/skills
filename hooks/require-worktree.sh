@@ -95,15 +95,24 @@ case "$tool" in
             *patch\ *|*"git apply"*|*"git checkout --"*|*"git restore"*)
                 writes=1 ;;
         esac
-        # Redirection into anything but a throwaway path.
-        case "$cmd" in
-            *">/dev/null"*|*"> /dev/null"*|*">/tmp/"*|*"> /tmp/"*) : ;;
-            *">>"*|*">"*)
-                case "$cmd" in
-                    *"2>&1"*|*"2>/dev/null"*|*"2> /dev/null"*) : ;;
-                    *) writes=1 ;;
-                esac
-                ;;
+        # Redirection into anything but a throwaway path. Test what is left
+        # after the parts that never write are removed, rather than asking
+        # whether the whole command mentions them anywhere: a command can
+        # both send stderr to /dev/null and write a real file.
+        if command -v sed >/dev/null 2>&1; then
+            bare=$(printf '%s' "$cmd" | sed \
+                -e "s/'[^']*'/Q/g" \
+                -e 's/"[^"]*"/Q/g' \
+                -e 's/2>&1//g' \
+                -e 's/[0-9]\{0,1\}>>*[[:space:]]*\/dev\/null//g' \
+                -e 's/[0-9]\{0,1\}>>*[[:space:]]*\/tmp\/[^[:space:]]*//g')
+        else
+            # Without sed, keep the conservative reading: every redirect
+            # counts. Denying a read is cheaper than missing a write.
+            bare=$cmd
+        fi
+        case "$bare" in
+            *">"*) writes=1 ;;
         esac
         ;;
 esac

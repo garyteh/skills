@@ -98,6 +98,14 @@ check require-worktree.sh deny "redirect into a file in primary" \
     "$(payload Bash "$primary" 'echo hi > notes.txt')"
 check require-worktree.sh allow "redirect to /dev/null in primary" \
     "$(payload Bash "$primary" 'grep -q x file 2>/dev/null')"
+check require-worktree.sh deny "redirect into a file with stderr merged" \
+    "$(payload Bash "$primary" 'echo hi > notes.txt 2>&1')"
+check require-worktree.sh deny "redirect into a file with stderr discarded" \
+    "$(payload Bash "$primary" 'echo hi > notes.txt 2>/dev/null')"
+check require-worktree.sh allow "angle bracket inside a quoted argument" \
+    "$(payload Bash "$primary" "git log --format='%an <%ae>'")"
+check require-worktree.sh allow "redirect into tmp in primary" \
+    "$(payload Bash "$primary" 'echo hi > /tmp/scratch.txt')"
 check require-worktree.sh allow "escape hatch honoured" \
     "$(payload Bash "$primary" 'WORKTREE_GATE=off sed -i s/a/b/ file.txt')"
 check require-worktree.sh allow "outside any repository" \
