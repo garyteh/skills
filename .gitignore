@@ -13,6 +13,6 @@ build/
 !scripts/
 !Makefile
 
-# Per-checkout settings, including the gate escape variables. Local to one
-# machine by design, so it never belongs in a commit.
+# Per-checkout settings. Local to one machine by design, so they never belong
+# in a commit.
 .claude/settings.local.json

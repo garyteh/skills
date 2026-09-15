@@ -1,17 +1,13 @@
 .POSIX:
-.PHONY: help validate test-hooks pack
+.PHONY: help validate pack
 
 help:
 	@echo "validate           lint every skill against AGENTS.md"
-	@echo "test-hooks         run the hook gates against fixture payloads"
 	@echo "pack               zip every skill into build/ for a Cowork upload"
 	@echo "pack name=<x>      zip just skills/<x>"
 
 validate:
 	@sh scripts/validate.sh
-
-test-hooks:
-	@sh scripts/test-hooks.sh
 
 pack:
 	@test -z "$(name)" || test -d "skills/$(name)" || \
