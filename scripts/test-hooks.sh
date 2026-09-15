@@ -45,6 +45,7 @@ jqless=$tmp/bin
 # check <script> <expected: allow|deny> <label> <payload>
 check() {
     _script=$1 _expect=$2 _label=$3 _payload=$4
+    _case_fail=0
     for _mode in jq sed; do
         if [ "$_mode" = jq ]; then
             _out=$(printf '%s' "$_payload" | sh "$hooks/$_script" 2>/dev/null || true)
@@ -52,7 +53,7 @@ check() {
             _out=$(printf '%s' "$_payload" |
                 env -i PATH="$jqless" HOME="$HOME" "$jqless/sh" "$hooks/$_script" 2>&1) ||
                 { printf 'FAIL  %-24s %s [sed] hook crashed: %s\n' \
-                    "$_script" "$_label" "$_out"; fail=$((fail + 1)); continue; }
+                    "$_script" "$_label" "$_out"; fail=$((fail + 1)); _case_fail=1; continue; }
         fi
         case "$_out" in
             *'"permissionDecision":"deny"'*) _got=deny ;;
@@ -62,11 +63,14 @@ check() {
             pass=$((pass + 1))
         else
             fail=$((fail + 1))
+            _case_fail=1
             printf 'FAIL  %-24s %s [%s] (expected %s, got %s)\n' \
                 "$_script" "$_label" "$_mode" "$_expect" "$_got"
         fi
     done
-    printf 'ok    %-24s %s\n' "$_script" "$_label"
+    if [ "$_case_fail" -eq 0 ]; then
+        printf 'ok    %-24s %s\n' "$_script" "$_label"
+    fi
 }
 
 payload() {
