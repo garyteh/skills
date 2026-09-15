@@ -48,9 +48,14 @@ check() {
     _case_fail=0
     for _mode in jq sed; do
         if [ "$_mode" = jq ]; then
-            # $_env is unquoted so a NAME=value pair splits into an argument.
+            # Clear the gate variables first. A checkout that sets one to
+            # work in this repository would otherwise turn off the very gate
+            # each case is asserting. $_env is unquoted so a NAME=value pair
+            # splits into an argument.
             # shellcheck disable=SC2086
-            _out=$(printf '%s' "$_payload" | env $_env sh "$hooks/$_script" 2>/dev/null || true)
+            _out=$(printf '%s' "$_payload" |
+                env -u WORKTREE_GATE -u TRUNK_GATE $_env \
+                    sh "$hooks/$_script" 2>/dev/null || true)
         else
             _out=$(printf '%s' "$_payload" |
                 env -i PATH="$jqless" HOME="$HOME" $_env "$jqless/sh" "$hooks/$_script" 2>&1) ||
