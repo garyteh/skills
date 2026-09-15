@@ -187,6 +187,10 @@ gates:
     - OK
     - TODO
     - FAQ
+    - AU
+    - US
+    - UK
+    - EU
     - AM
     - PM
     - AI

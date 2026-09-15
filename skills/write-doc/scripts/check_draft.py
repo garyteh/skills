@@ -81,7 +81,7 @@ DEFAULT_WARM_CLOSERS = (
 DEFAULT_ACRONYM_ALLOWLIST = {
     "API", "CPU", "CSV", "DB", "GDPR", "HTTP", "HTTPS", "ID", "JSON", "PR",
     "QA", "SDK", "SLA", "SLO", "SQL", "TTL", "URL", "UTC", "UI", "UX", "YAML",
-    "OK", "TODO", "FAQ", "AM", "PM", "AI",
+    "OK", "TODO", "FAQ", "AU", "US", "UK", "EU", "AM", "PM", "AI",
 }
 DEFAULT_STEP_VERBS = (
     "select", "choose", "clear", "enter", "open", "close", "go", "turn",

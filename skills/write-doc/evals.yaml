@@ -1,5 +1,5 @@
 # Cases for write-doc. Authored from failures observed running the task with no
-# skill loaded, and from the defects the 2 source skills were built against.
+# skill loaded.
 # Behaviour cases check what it does once fired; trigger cases check when it fires.
 
 cases:
@@ -33,8 +33,8 @@ cases:
     expect_fires: true
 
   # --- triggers, task genre -------------------------------------------------
-  # Both of these belonged to a separate skill before the 2 genres shared one
-  # flow, so they are the cases most likely to route wrongly.
+  # The genres sit closest here, so these are the cases most likely to route
+  # wrongly.
   - query: "turn my notes into a how-to for the support team"
     kind: trigger
     expect_fires: true
