@@ -124,11 +124,11 @@ of guessing Restructure when they meant Draft is an interrogation they did not w
 The output is a spine, the open questions, and what the document would owe its reader.
 Offering to draft is right; drafting unasked defeats the mode.
 
-**Resume reads the disk, never a remembered list.** List the destination recorded in the
-draft's own resume block, match the file they named, and read that block. Where they named
-no file and more than one draft is open, show the open drafts with their next action and
-let them pick. Where nothing matches, say so and offer Draft rather than inventing prior
-context.
+**Resume reads the disk, never a remembered list.** List the directory the author named,
+or `drafts.suggested_directory` from `config.yaml` where they named none, match the file
+they named, and read its resume block. Where they named no file and more than one draft is
+open, show the open drafts with their next action and let them pick. Where nothing
+matches, say so and offer Draft rather than inventing prior context.
 
 ## Step 1 — Settle the reader, the intent and the trigger
 
