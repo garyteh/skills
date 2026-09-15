@@ -1,6 +1,10 @@
 # Authoring contract
 
-This repository produces agent skills that run unmodified on every harness: Claude Code, Codex, Cursor, opencode, Copilot, Gemini CLI, Amp and the rest. Portability is the product. A skill that needs a per-harness fork has failed.
+This repository produces agent skills that are agnostic on three axes. Portability is the product.
+
+- **Harness** — runs unmodified on Claude Code, Codex, Cursor, opencode, Copilot, Gemini CLI, Amp and the rest, and on whatever connectors and sibling skills that install happens to have. A skill that needs a per-harness fork has failed.
+- **Organisation** — nothing names an employer, product, team or internal system.
+- **Person** — nothing assumes who is running it. A stranger installs the skill and it works.
 
 Follow this contract for every skill you write or revise here. `skills/skill-author/` is the procedure; this is the standard it is held to.
 
@@ -66,10 +70,21 @@ The description is the only text loaded before the skill fires. It is the entire
 - Name the external service plainly. Jira, Slack, Confluence, a calendar. Telling the agent which system to hit is the point; resolving that to a connected tool is the agent's job.
 - Never name a specific tool binding in prose. Install-specific identifiers, server names, board keys and paths come from config, so the skill survives a rename and a different install.
 - Where a host capability is a genuine hard requirement, state it in the first lines of the body. A hidden dependency fails at run time; a stated one fails at install time, which is cheaper.
+- Encode no connector's call signature or response schema. Tool names, parameter shapes and payload fields differ per install and per server version, so read what actually comes back rather than what you expected.
+- Where nothing here reaches a required service, name the service that is missing and ask for it. Asking is a complete path; guessing at a call the host cannot make fails silently and reports success.
+- Require no other skill. Where a neighbouring capability would improve the output, describe the capability rather than the skill that supplies it, so whatever the host has can serve it. Naming a sibling stays right as a routing boundary, where the name is the whole point.
 - Scripts are `#!/bin/sh` and POSIX, marked executable, with no bashisms. Check for every external binary before calling it.
 - Paths inside `SKILL.md` resolve relative to `SKILL.md`. No absolute paths, no `~`.
 
 Read `references/portability.md` before writing anything that touches tools, paths or shell.
+
+## Organisation and person
+
+Every skill here ships publicly, so the bundle carries no trace of where it came from or who wrote it. The config test asks whether a stranger could use the skill unchanged; this asks whether they could tell it was not written for them.
+
+- Name no employer, product, team, meeting, channel or person other than a skill's own subject, in `SKILL.md`, the description, references, config or script comments. Naming the external service the skill talks to is still right: the point is which system to hit, not whose install it is.
+- Name no internal identifier either: board and project keys, hostnames, tenant ids, internal URLs, user-specific paths, team-specific folder names.
+- Where a real value is needed, ship a neutral default in config, or ship the key empty with a comment showing the shape. Say which one it is, so nobody adopting the skill mistakes a placeholder for a working value.
 
 ## Progressive disclosure
 
@@ -91,7 +106,7 @@ Each of these fails silently rather than loudly, which is why they are worth sta
 3. **Filenames resolve against disk.** Anything deriving a filename reads what is actually there, never a hardcoded list.
 4. **Shared values live in config, stated once.** No file restates a value that config holds.
 5. **Exactly one frontmatter block.** Duplicates or extra keys can stop the skill loading at all.
-6. **Every skill named anywhere resolves.** A body or description pointing at a skill that is not installed states scope but routes nothing. Pointers to shared skills outside this repository are legitimate and stay.
+6. **Every skill named anywhere resolves.** A body or description pointing at a skill that is not installed states scope but routes nothing. Name a sibling only as a routing boundary, where the name is the whole point. Where the work itself needs a neighbouring capability, name the capability and let config supply the skill.
 
 ## Untrusted content
 
@@ -177,4 +192,6 @@ Check these by reading:
 - [ ] Rules carry their reason wherever judgement is needed
 - [ ] Fetched content is treated as data, and any write names its verifying read
 - [ ] Every shareable trait is a config value
+- [ ] Nothing names an employer, product, team, person or internal identifier
+- [ ] No connector shape and no sibling skill is required for the skill to run
 - [ ] Every rule traces to an observed failure
