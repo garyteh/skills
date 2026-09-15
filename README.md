@@ -101,10 +101,24 @@ decline. Two `PreToolUse` gates make the git workflow non-optional instead.
 - `hooks/require-trunk-landing.sh` denies an ad hoc `git commit` or `git push`
   and points at the `git-solo-trunk` skill.
 
-Each denial names its escape: re-run with `WORKTREE_GATE=off` or
-`TRUNK_GATE=off` in front of the command. Those are speed bumps rather than
-controls. They exist so the skill is the path of least resistance, and so the
-skills' own commands are not blocked by the gate that names them.
+Each denial names its escape: set `WORKTREE_GATE=off` or `TRUNK_GATE=off` in
+the environment. Export it before starting the agent, or put it in
+`.claude/settings.local.json`, which is gitignored and local to one checkout:
+
+```json
+{ "env": { "WORKTREE_GATE": "off" } }
+```
+
+The escape is the environment and nothing else. A `PreToolUse` hook runs before
+the command, so an assignment written in front of one never reaches the hook's
+environment — it arrives as text in the payload. Matching it there meant any
+command that merely quoted the words turned the gate off, including a command
+that then wrote a file.
+
+So a gate is on or off for a session rather than for one command. An agent
+cannot land a change mid-session unless the variable is already set, which is
+the point: it hands back to you. These stay speed bumps rather than controls,
+and they exist so the skill is the path of least resistance.
 
 The scripts are portable; only the wiring differs. `.claude/settings.json` and
 `.codex/hooks.json` carry the same events, matchers and commands, because both

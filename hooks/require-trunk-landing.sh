@@ -6,8 +6,8 @@
 # where the change actually sits, and verifies the landing with a separate
 # read.
 #
-# Escape: prefix the command with TRUNK_GATE=off. The skill's own commands
-# need it, since they are the commands this gate matches.
+# Escape: set TRUNK_GATE=off in the environment. A hook runs before the
+# command, so an assignment written in front of one never reaches here.
 
 set -u
 
@@ -33,37 +33,15 @@ deny() {
     exit 0
 }
 
-# True where the gate variable is set to off as an environment prefix, before
-# the command word. Matched anywhere in the string instead, a quoted mention
-# inside a real write turns the gate off.
-gate_off_prefix() {
-    _rest=$1
-    while :; do
-        case "$_rest" in
-            " "*) _rest=${_rest# }; continue ;;
-        esac
-        _word=${_rest%% *}
-        case "$_word" in
-            "$2") return 0 ;;
-            *=*) ;;
-            *) return 1 ;;
-        esac
-        case "$_rest" in
-            *" "*) _rest=${_rest#* } ;;
-            *) return 1 ;;
-        esac
-    done
-}
-
 tool=$(field '.tool_name' 'tool_name')
 cmd=$(field '.tool_input.command' 'command')
 
 [ "$tool" = "Bash" ] || exit 0
 
-# Escape hatch, as an environment prefix on the command or in the hook's own
-# environment.
+# Escape hatch. Only the real environment counts: an assignment written in
+# front of the command arrives as text, and matching it there let a command
+# that merely quoted the words turn the gate off.
 [ "${TRUNK_GATE:-}" = "off" ] && exit 0
-gate_off_prefix "$cmd" "TRUNK_GATE=off" && exit 0
 
 # Strip quoted text before matching. A command that quotes the phrase is
 # talking about it rather than running it, and denying a read teaches you to
@@ -81,4 +59,4 @@ case "$bare" in
     *) exit 0 ;;
 esac
 
-deny "Landing a change goes through the git-solo-trunk skill, which reads the default branch from the remote rather than assuming one, picks a route from where the change currently sits, and confirms the landing with a separate read. Read it, then re-run with TRUNK_GATE=off in front of the command."
+deny "Landing a change goes through the git-solo-trunk skill, which reads the default branch from the remote rather than assuming one, picks a route from where the change currently sits, and confirms the landing with a separate read. Read it, then set TRUNK_GATE=off in the environment to land from here."

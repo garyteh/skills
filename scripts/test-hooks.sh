@@ -116,7 +116,9 @@ check require-trunk-landing.sh deny "git push" \
     "$(payload Bash "$primary" 'git push')"
 check require-trunk-landing.sh deny "git commit" \
     "$(payload Bash "$primary" 'git commit -m wip')"
-check require-trunk-landing.sh allow "escape hatch honoured" \
+check require-trunk-landing.sh allow "escape variable set in the environment" \
+    "$(payload Bash "$primary" 'git push origin HEAD:master')" TRUNK_GATE=off
+check require-trunk-landing.sh deny "escape written as a command prefix" \
     "$(payload Bash "$primary" 'TRUNK_GATE=off git push origin HEAD:master')"
 check require-trunk-landing.sh deny "escape hatch named inside the command" \
     "$(payload Bash "$primary" 'git commit -m TRUNK_GATE=off')"

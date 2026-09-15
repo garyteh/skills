@@ -12,3 +12,7 @@ build/
 # committing drops the validator and the scripts a skill executes.
 !scripts/
 !Makefile
+
+# Per-checkout settings, including the gate escape variables. Local to one
+# machine by design, so it never belongs in a commit.
+.claude/settings.local.json
