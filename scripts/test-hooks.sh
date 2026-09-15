@@ -44,14 +44,16 @@ jqless=$tmp/bin
 
 # check <script> <expected: allow|deny> <label> <payload>
 check() {
-    _script=$1 _expect=$2 _label=$3 _payload=$4
+    _script=$1 _expect=$2 _label=$3 _payload=$4 _env=${5:-}
     _case_fail=0
     for _mode in jq sed; do
         if [ "$_mode" = jq ]; then
-            _out=$(printf '%s' "$_payload" | sh "$hooks/$_script" 2>/dev/null || true)
+            # $_env is unquoted so a NAME=value pair splits into an argument.
+            # shellcheck disable=SC2086
+            _out=$(printf '%s' "$_payload" | env $_env sh "$hooks/$_script" 2>/dev/null || true)
         else
             _out=$(printf '%s' "$_payload" |
-                env -i PATH="$jqless" HOME="$HOME" "$jqless/sh" "$hooks/$_script" 2>&1) ||
+                env -i PATH="$jqless" HOME="$HOME" $_env "$jqless/sh" "$hooks/$_script" 2>&1) ||
                 { printf 'FAIL  %-24s %s [sed] hook crashed: %s\n' \
                     "$_script" "$_label" "$_out"; fail=$((fail + 1)); _case_fail=1; continue; }
         fi
@@ -86,41 +88,27 @@ file_payload() {
 }
 
 # require-worktree.sh
-check require-worktree.sh allow "read-only command in primary" \
-    "$(payload Bash "$primary" 'ls -la')"
-check require-worktree.sh deny "Edit in primary checkout" \
-    "$(payload Edit "$primary" '')"
-check require-worktree.sh allow "Edit inside a linked worktree" \
-    "$(payload Edit "$linked" '')"
-check require-worktree.sh deny "sed -i in primary checkout" \
-    "$(payload Bash "$primary" 'sed -i s/a/b/ file.txt')"
-check require-worktree.sh deny "redirect into a file in primary" \
+# Only the edit tools reach this gate; shell commands are not its business.
+check require-worktree.sh allow "shell command in primary" \
     "$(payload Bash "$primary" 'echo hi > notes.txt')"
-check require-worktree.sh allow "redirect to /dev/null in primary" \
-    "$(payload Bash "$primary" 'grep -q x file 2>/dev/null')"
-check require-worktree.sh deny "redirect into a file with stderr merged" \
-    "$(payload Bash "$primary" 'echo hi > notes.txt 2>&1')"
-check require-worktree.sh deny "redirect into a file with stderr discarded" \
-    "$(payload Bash "$primary" 'echo hi > notes.txt 2>/dev/null')"
-check require-worktree.sh allow "angle bracket inside a quoted argument" \
-    "$(payload Bash "$primary" "git log --format='%an <%ae>'")"
-check require-worktree.sh allow "redirect into tmp in primary" \
-    "$(payload Bash "$primary" 'echo hi > /tmp/scratch.txt')"
-check require-worktree.sh allow "escape hatch honoured" \
-    "$(payload Bash "$primary" 'WORKTREE_GATE=off sed -i s/a/b/ file.txt')"
-check require-worktree.sh allow "escape hatch after another assignment" \
-    "$(payload Bash "$primary" 'TRUNK_GATE=off WORKTREE_GATE=off sed -i s/a/b/ f.txt')"
-check require-worktree.sh deny "escape hatch named inside a write" \
-    "$(payload Bash "$primary" 'echo WORKTREE_GATE=off > notes.txt')"
+check require-worktree.sh deny "edit with no path given" \
+    "$(payload Edit "$primary" '')"
+check require-worktree.sh allow "edit inside a linked worktree" \
+    "$(file_payload Edit "$linked" "$linked/notes.md")"
 check require-worktree.sh allow "outside any repository" \
     "$(payload Edit "$tmp" '')"
-check require-worktree.sh deny "Write into the primary checkout" \
+check require-worktree.sh deny "write into the primary checkout" \
     "$(file_payload Write "$primary" "$primary/notes.md")"
-check require-worktree.sh allow "Write to a path outside the repository" \
+check require-worktree.sh deny "write to a relative path in primary" \
+    "$(file_payload Write "$primary" 'notes.md')"
+check require-worktree.sh deny "notebook edit into the primary checkout" \
+    "$(file_payload NotebookEdit "$primary" "$primary/book.ipynb")"
+check require-worktree.sh allow "write to a path outside the repository" \
     "$(file_payload Write "$primary" "$tmp/outside.md")"
-check require-worktree.sh allow "Write to an absolute path elsewhere" \
+check require-worktree.sh allow "write to an absolute path elsewhere" \
     "$(file_payload Write "$primary" '/tmp/scratch-note.md')"
-
+check require-worktree.sh allow "escape variable set in the environment" \
+    "$(file_payload Write "$primary" "$primary/notes.md")" WORKTREE_GATE=off
 # require-trunk-landing.sh
 check require-trunk-landing.sh allow "unrelated command" \
     "$(payload Bash "$primary" 'ls -la')"

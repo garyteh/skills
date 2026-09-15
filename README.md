@@ -88,10 +88,16 @@ Same store, same symlinks, one skill. Fails if `skills/my-skill` does not exist,
 Skills are model-invoked, so a description is a suggestion the router may
 decline. Two `PreToolUse` gates make the git workflow non-optional instead.
 
-- `hooks/require-worktree.sh` denies a write issued from the primary checkout
-  and points at the `git-worktree` skill. It allows inside a linked worktree,
-  detected by `git rev-parse --git-common-dir`, so it cannot block the worktree
-  it just asked for.
+- `hooks/require-worktree.sh` denies an edit issued from the primary checkout
+  and points at the `git-worktree` skill. It gates the edit tools, and only
+  where the target lands inside this repository. It allows inside a linked
+  worktree, detected by `git rev-parse --git-common-dir`, so it cannot block
+  the worktree it just asked for.
+
+  It does not read shell commands. The gate has to catch the first edit rather
+  than every write: once a session is working in a worktree, everything it does
+  after that is already isolated. Deciding whether a shell command writes means
+  parsing shell, which denies ordinary reads every time it is tried.
 - `hooks/require-trunk-landing.sh` denies an ad hoc `git commit` or `git push`
   and points at the `git-solo-trunk` skill.
 
