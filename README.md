@@ -9,8 +9,7 @@ Portable agent skills. Everything here runs unmodified on Claude Code, Codex, Cu
 ```
 AGENTS.md                the contract
 CLAUDE.md                symlink -> AGENTS.md
-agents.txt               install targets, one agent id per line
-Makefile                 validate / install / uninstall / new
+Makefile                 validate / test-hooks / pack
 hooks/
   require-worktree.sh    gate: the primary checkout is not for editing
   require-trunk-landing.sh  gate: land through the documented procedure
@@ -19,8 +18,6 @@ hooks/
 scripts/
   validate.sh            the linter
   test-hooks.sh          fixture tests for the gates
-  install.sh             reads agents.txt, drives the skills CLI
-  uninstall.sh           removes this repo's skills from every agent
   pack.sh                zips a skill for a Cowork upload
   banned-fail.txt        phrases that fail a build
   banned-warn.txt        phrases that warn
@@ -36,10 +33,10 @@ skills/
 ## Create a skill
 
 ```sh
-make new name=my-skill
+cd skills && npx skills init my-skill
 ```
 
-Then write it. `skills/skill-author/` is the skill that does this properly: point any agent at it and it will follow the contract, ground the content, and iterate against the validator.
+Then write it, and run `make validate` on what you wrote. `skills/skill-author/` is the skill that does this properly: point any agent at it and it will follow the contract, ground the content, and iterate against the validator.
 
 ## Validate
 
@@ -64,24 +61,17 @@ sh scripts/validate.sh /path/to/some/skills
 ## Install
 
 ```sh
-make install
+npx skills add . -g -y                # every skill
+npx skills add . -g -y -s my-skill    # just one
 ```
-
-Runs `npx skills add . -g -y` against every agent listed in `agents.txt`.
 
 The CLI copies each skill into a canonical store, `~/.agents/skills/<name>`, then points every agent directory at that copy — `~/.claude/skills/<name>` becomes a symlink to it. Most agents read the canonical store directly.
 
-**This repository is the source, not the install.** Editing a `SKILL.md` here does not reach the installed copy. Re-run `make install` after every change; it is idempotent and propagates edits and reverts alike.
+**This repository is the source, not the install.** Editing a `SKILL.md` here does not reach the installed copy. Re-run the command after every change; it is idempotent and propagates edits and reverts alike.
 
-Add or remove targets by editing `agents.txt`. `npx skills add --help` lists the valid agent ids.
+With no `-a`, the CLI targets the agents it finds on the machine. Install a new agent later and it holds none of these until this runs again.
 
-To push a single skill:
-
-```sh
-make install name=my-skill
-```
-
-Same store, same symlinks, one skill. Fails if `skills/my-skill` does not exist, because the CLI would otherwise install nothing and exit 0.
+`-s` takes a name that exists under `skills/`. Pass one that does not and the CLI exits 1 listing what is available, rather than installing nothing quietly.
 
 ## Hooks
 
@@ -144,15 +134,15 @@ twice, once with `jq` on `PATH` and once without, because the scripts carry a
 ## Uninstall
 
 ```sh
-make uninstall              # every skill this repo defines
-make uninstall name=my-skill
+npx skills remove -g -y $(ls skills)    # every skill this repo defines
+npx skills remove -g -y my-skill
 ```
 
-Names come from `skills/*/` on disk, never a list in the script, and are always passed explicitly: `npx skills remove --all` would take out every skill you have installed from anywhere, so this tooling does not use it.
+Names come from `skills/` on disk and are always passed explicitly. Never `npx skills remove --all`: it takes out every skill you have installed, from every source, not only these.
 
-No `-a` flag either, so the CLI cleans the link in every agent directory rather than only the agents in `agents.txt`. Drop an agent from that list and its copy is still installed and still routing; a plain `make uninstall` reaches it.
+No `-a` flag either, so the CLI cleans the link in every agent directory rather than only the ones you last installed to. An agent you have since stopped using still holds a live copy otherwise.
 
-`name=` need not exist in `skills/`. That is the point on a rename: `git mv` the directory, update `name` to match, `make uninstall name=<old>`, then `make install`. Skip the removal and the old name stays installed and keeps routing.
+A name need not still exist under `skills/`. That is the point on a rename: `git mv` the directory, update `name` to match, remove the old name, then install again. Skip the removal and the old name stays installed and keeps routing.
 
 ## Package
 
