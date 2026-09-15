@@ -27,7 +27,7 @@ One skill per directory:
 skills/<skill-name>/
 ├── SKILL.md      required, at the folder root
 ├── references/   optional, loaded on demand
-├── scripts/      optional, POSIX shell
+├── scripts/      optional, shell or a declared interpreter
 ├── config.yaml   optional, shareable values
 └── evals.yaml    optional, test cases
 ```
@@ -73,7 +73,7 @@ The description is the only text loaded before the skill fires. It is the entire
 - Encode no connector's call signature or response schema. Tool names, parameter shapes and payload fields differ per install and per server version, so read what actually comes back rather than what you expected.
 - Where nothing here reaches a required service, name the service that is missing and ask for it. Asking is a complete path; guessing at a call the host cannot make fails silently and reports success.
 - Require no other skill. Where a neighbouring capability would improve the output, describe the capability rather than the skill that supplies it, so whatever the host has can serve it. Naming a sibling stays right as a routing boundary, where the name is the whole point.
-- Scripts are `#!/bin/sh` and POSIX, marked executable, with no bashisms. Check for every external binary before calling it.
+- Scripts default to `#!/bin/sh` and POSIX, marked executable, with no bashisms. Where shell would be unreasonable for the work, another interpreter is fine, declared like any other host requirement above. Check for every external binary before calling it.
 - Paths inside `SKILL.md` resolve relative to `SKILL.md`. No absolute paths, no `~`.
 
 Read `references/portability.md` before writing anything that touches tools, paths or shell.
