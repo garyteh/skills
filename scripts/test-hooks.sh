@@ -121,6 +121,20 @@ check require-trunk-landing.sh deny "git push" \
     "$(payload Bash "$primary" 'git push')"
 check require-trunk-landing.sh deny "git commit" \
     "$(payload Bash "$primary" 'git commit -m wip')"
+check require-trunk-landing.sh deny "landing behind a directory option" \
+    "$(payload Bash "$primary" 'git -C /tmp/x commit -m wip')"
+check require-trunk-landing.sh deny "landing behind a config option" \
+    "$(payload Bash "$primary" 'git -c user.email=t@t commit -m wip')"
+check require-trunk-landing.sh deny "landing behind a git-dir option" \
+    "$(payload Bash "$primary" 'git --git-dir=/tmp/x/.git push')"
+check require-trunk-landing.sh deny "landing second in a chain" \
+    "$(payload Bash "$primary" 'git add -A && git commit -m wip')"
+check require-trunk-landing.sh deny "landing by absolute path to the binary" \
+    "$(payload Bash "$primary" '/usr/bin/git push')"
+check require-trunk-landing.sh allow "another subcommand behind the same option" \
+    "$(payload Bash "$primary" 'git -C /tmp/x status')"
+check require-trunk-landing.sh allow "a read naming the verb in an option" \
+    "$(payload Bash "$primary" 'git log --grep=wip')"
 check require-trunk-landing.sh allow "escape variable set in the environment" \
     "$(payload Bash "$primary" 'git push origin HEAD:master')" TRUNK_GATE=off
 check require-trunk-landing.sh deny "escape written as a command prefix" \

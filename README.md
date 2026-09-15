@@ -99,7 +99,9 @@ decline. Two `PreToolUse` gates make the git workflow non-optional instead.
   after that is already isolated. Deciding whether a shell command writes means
   parsing shell, which denies ordinary reads every time it is tried.
 - `hooks/require-trunk-landing.sh` denies an ad hoc `git commit` or `git push`
-  and points at the `git-solo-trunk` skill.
+  and points at the `git-solo-trunk` skill. It reads the subcommand rather
+  than the two words side by side, so a global option in front of the verb
+  does not slip past it.
 
 Each denial names its escape: set `WORKTREE_GATE=off` or `TRUNK_GATE=off` in
 the environment. Export it before starting the agent, or put it in
