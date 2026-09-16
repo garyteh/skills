@@ -6,7 +6,7 @@ This repository produces agent skills that are agnostic on three axes. Portabili
 - **Organisation** — nothing names an employer, product, team or internal system.
 - **Person** — nothing assumes who is running it. A stranger installs the skill and it works.
 
-Follow this contract for every skill you write or revise here. `skills/skill-author/` is the procedure; this is the standard it is held to.
+Follow this contract for every skill you write or revise here. `.agents/skills/skill-author/` is the procedure; this is the standard it is held to.
 
 ## Is this a skill?
 
@@ -21,16 +21,22 @@ Determinism alone does not disqualify it. A skill that wraps an exact script is 
 
 ## Layout
 
-One skill per directory:
+Two trees, one skill per directory in each:
+
+- `skills/<skill-name>/` — published. What an install of this repository gets.
+- `.agents/skills/<skill-name>/` — harness. The skills this repository runs on itself.
+
+Both hold the same files:
 
 ```
-skills/<skill-name>/
-├── SKILL.md      required, at the folder root
-├── references/   optional, loaded on demand
-├── scripts/      optional, shell or a declared interpreter
-├── config.yaml   optional, shareable values
-└── evals.yaml    optional, test cases
+SKILL.md      required, at the folder root
+references/   optional, loaded on demand
+scripts/      optional, shell or a declared interpreter
+config.yaml   optional, shareable values
+evals.yaml    optional, test cases
 ```
+
+A skill lives in one tree or the other, never both. `.agents/skills/` is source and is edited in place, so nothing copies a skill between the trees and neither tree is generated from the other. Everything in this contract applies to both, bar the one frontmatter key below.
 
 `<skill-name>` matches the `name` in frontmatter exactly. Never place a `SKILL.md` at the repository root, and never nest a second one below a skill's root: the installer silently prefers the shallower file, so the nested one is dead weight nobody notices.
 
@@ -49,6 +55,15 @@ description: Does X. Use when Y.
 - `description` — 1024 characters or fewer. Aim well under it; a description sitting near the limit fails on the next small edit.
 
 Nothing else. Not `license`, `compatibility`, `metadata`, `model`, `allowed-tools`, `argument-hint`, or `disable-model-invocation`. Each is either read by nobody at load time or specific to a single host, so a skill carrying them advertises behaviour it will not get elsewhere. `allowed-tools` in particular is pre-approval, not sandboxing; real restriction comes from the host's permission rules.
+
+One exception, and it holds for `.agents/skills/` alone:
+
+```yaml
+metadata:
+  internal: true
+```
+
+An install walks the whole repository tree and reads `.agents/skills/` as a skills container like any other, so a harness skill without this marker is offered for installation beside the published ones. The marker is the only thing that filters it out. Keep it on every harness `SKILL.md`, and keep it off every published one.
 
 Frontmatter is static text and cannot reference a file, so anything put there duplicates whatever config holds.
 

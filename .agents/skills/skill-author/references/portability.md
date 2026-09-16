@@ -90,12 +90,3 @@ ln -s AGENTS.md CLAUDE.md
 ```
 
 A pointer file saying "see AGENTS.md" is weaker, because reading it is a hop the agent may not take.
-
-## Changing a skill
-
-- Verify by rule-level diff, old against new, in both directions: rules dropped, and rules invented. Never verify by running anything that writes.
-- Stage it. Build, verify, cut over one at a time, then delete the old.
-- Show the staged sequence before any of it runs.
-- A rename is a move plus a cleanup: `git mv` the directory, update `name` to match, `npx skills remove <old-name>`, then reinstall. Skipping the removal leaves the old name installed and routing.
-- A multi-file skill changes as a whole. Editing an installed copy does nothing to the source, and editing the source does nothing to the install until it is re-run.
-- After changing a skill, diff the source against the canonical store to confirm what landed. Never report an install you have not verified.

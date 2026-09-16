@@ -1,6 +1,6 @@
 ---
 name: skill-author
-description: Writes, revises and audits portable agent skills that run unmodified on Claude Code, Codex, Cursor, opencode, Copilot and other harnesses. Use when creating a new skill, editing an existing SKILL.md, splitting a skill into references, writing eval cases for one, or checking one for cross-harness portability.
+description: Writes and audits portable agent skills that run unmodified on Claude Code, Codex, Cursor, opencode, Copilot and other harnesses. Use when creating a new skill, splitting a skill into references, writing eval cases for one, or checking one for cross-harness portability.
 metadata:
   internal: true
 ---
@@ -16,6 +16,8 @@ Walk up from the working directory for a folder holding both `AGENTS.md` and a `
 Never derive the target from where this skill is installed. Installed skills are read-only copies, and writing beside them reaches nothing. If no repository is found, ask which one to write into.
 
 Read that repository's `AGENTS.md` before writing. It is the contract; this is the procedure.
+
+A repository may also keep a second tree, under an agent directory such as `.agents/skills/`, holding the skills it runs on itself. Two rules follow. Each of those files is source and is edited where it sits, so nothing is copied between the trees in either direction. And a frontmatter key marking one internal to its repository stays: it is what keeps a harness skill out of an install's listing, and stripping it to satisfy a two-keys-only rule breaks the repository quietly. The repository's `AGENTS.md` says which tree is which.
 
 ## Decide it is a skill
 
@@ -50,7 +52,7 @@ Say **execute** or **read** for every bundled script.
 
 ## Write it
 
-Create `skills/<name>/SKILL.md` with exactly two frontmatter keys:
+Create `<tree>/<name>/SKILL.md` with exactly two frontmatter keys:
 
 ```yaml
 ---

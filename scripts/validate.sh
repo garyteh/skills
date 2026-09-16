@@ -3,7 +3,9 @@
 #
 #   sh scripts/validate.sh [skills-dir]
 #
-# Defaults to the skills/ directory beside this script's repository root.
+# Defaults to both of this repository's trees: skills/ published, and
+# .agents/skills/ harness. Given a directory, checks that one as a published
+# tree, which is how another repository's skills get linted.
 # Exits 0 when no FAIL was recorded, 1 otherwise. WARN never changes the exit.
 #
 # Tallies go to files, not shell variables: most checks run inside pipelines,
@@ -14,6 +16,7 @@ set -u
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 repo_root=$(CDPATH= cd -- "$script_dir/.." && pwd)
 skills_dir=${1:-$repo_root/skills}
+harness_dir=$repo_root/.agents/skills
 
 fail_patterns=$script_dir/banned-fail.txt
 warn_patterns=$script_dir/banned-warn.txt
@@ -206,8 +209,10 @@ check_reference() {
     # forbids, so banned-phrase matching makes correct content unsatisfiable.
 }
 
+# $1 skill directory, $2 tree: published (default) or harness.
 validate_skill() {
     dir=$1
+    mode=${2:-published}
     dname=$(basename "$dir")
     f=$dir/SKILL.md
     rel=$(rel_of "$f")
@@ -243,11 +248,33 @@ validate_skill() {
     fi
 
     # --- keys ---------------------------------------------------------------
+    # A harness skill also carries metadata, holding the internal marker checked
+    # below. The marker's own line is indented, so the extraction here never
+    # sees it and only the top-level key needs allowing.
+    if [ "$mode" = harness ]; then
+        allowed_keys='name|description|metadata'
+        allowed_text='name, description and metadata'
+    else
+        allowed_keys='name|description'
+        allowed_text='name and description'
+    fi
+
     printf '%s\n' "$fm" | grep -E '^[A-Za-z_][A-Za-z0-9_-]*:' | sed 's/:.*$//' |
-        grep -vxE 'name|description' |
+        grep -vxE "$allowed_keys" |
         while read -r key; do
-            fail "$rel" "frontmatter key \"$key\" is not portable; only name and description are allowed"
+            fail "$rel" "frontmatter key \"$key\" is not portable; only $allowed_text are allowed"
         done
+
+    # --- harness marker -----------------------------------------------------
+    # An install reads .agents/skills/ as a skills container like any other, and
+    # this marker is the only thing keeping a harness skill out of the listing.
+    # Losing it is silent, so it fails the build instead.
+    if [ "$mode" = harness ]; then
+        if ! printf '%s\n' "$fm" | grep -qE '^metadata:[[:space:]]*$' ||
+           ! printf '%s\n' "$fm" | grep -qE '^[[:space:]]+internal:[[:space:]]*true[[:space:]]*$'; then
+            fail "$rel" 'no metadata.internal: true; an install would offer this harness skill beside the published ones'
+        fi
+    fi
 
     # --- name ---------------------------------------------------------------
     name=$(fm_value "$fm" name)
@@ -351,6 +378,15 @@ for dir in "$skills_dir"/*/; do
     [ -d "$dir" ] || continue
     validate_skill "${dir%/}"
 done
+
+# Only on a default run. Given a directory, the caller is linting some other
+# repository, which has no harness tree of this one's.
+if [ "$skills_dir" = "$repo_root/skills" ] && [ -d "$harness_dir" ]; then
+    for dir in "$harness_dir"/*/; do
+        [ -d "$dir" ] || continue
+        validate_skill "${dir%/}" harness
+    done
+fi
 
 for s in "$script_dir"/*.sh; do
     [ -f "$s" ] || continue

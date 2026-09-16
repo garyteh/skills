@@ -51,3 +51,20 @@ cases:
     expect:
       - "it checks for host-specific tool names in the prose"
       - "it runs or names the validator rather than only reading the file"
+
+  # The two-keys rule has one carve-out, and the failure it guards is silent:
+  # the skill still loads, so nothing looks broken until an install lists it.
+  - query: "this SKILL.md under .agents/skills/ has metadata.internal in the frontmatter, clean it up"
+    kind: behaviour
+    expect_absent:
+      - "removed the metadata key"
+    expect:
+      - "it keeps metadata.internal: true rather than stripping it"
+      - "it says the marker is what keeps a harness skill out of an install's listing"
+      - "it reads the repository's AGENTS.md to confirm which tree the file is in"
+
+  - query: "skills/foo and .agents/skills/foo have drifted, sync them"
+    kind: behaviour
+    expect:
+      - "it does not copy one tree over the other"
+      - "it asks which tree the skill belongs in, since a skill lives in one or the other"

@@ -16,3 +16,8 @@ build/
 # Per-checkout settings. Local to one machine by design, so they never belong
 # in a commit.
 .claude/settings.local.json
+
+# Written by the skills CLI on a project-scoped install. Nothing here installs
+# project-scoped, so the file is only ever a stray artefact of running the CLI
+# without -g.
+/skills-lock.json

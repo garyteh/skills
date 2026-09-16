@@ -16,13 +16,21 @@ scripts/
   banned-fail.txt        phrases that fail a build
   banned-warn.txt        phrases that warn
 skills/
-  <skill-name>/
+  <skill-name>/          published, installable from this repository
     SKILL.md             required
     references/          optional, loaded on demand
     scripts/             optional, POSIX shell
     config.yaml          optional, shareable values
     evals.yaml           optional, test cases
+.agents/skills/
+  <skill-name>/          harness, the skills this repository runs on itself
+.claude/skills/
+  <skill-name>           symlink -> ../../.agents/skills/<skill-name>
 ```
+
+A skill is in one tree or the other. Both are source and both are edited by hand; neither is generated from the other, and `make validate` checks both.
+
+Every `SKILL.md` under `.agents/skills/` carries `metadata.internal: true`. An install walks the whole repository tree and reads that directory as a skills container like any other, so the marker is what keeps a harness skill out of the listing. `AGENTS.md` has the rule.
 
 ## Create a skill
 
@@ -30,7 +38,7 @@ skills/
 cd skills && npx skills init my-skill
 ```
 
-Then write it, and run `make validate` on what you wrote. `skills/skill-author/` is the skill that does this properly: point any agent at it and it will follow the contract, ground the content, and iterate against the validator.
+Then write it, and run `make validate` on what you wrote. `.agents/skills/skill-author/` is the skill that does this properly: point any agent at it and it will follow the contract, ground the content, and iterate against the validator.
 
 ## Validate
 
@@ -38,7 +46,9 @@ Then write it, and run `make validate` on what you wrote. `skills/skill-author/`
 make validate
 ```
 
-Fails on: non-portable frontmatter keys, a `name` that does not match its directory, an over-long description, a description containing angle brackets, an unquoted description containing `": "` or `" #"` (YAML reads a nested mapping or a comment, and the skill either never installs or installs with half its triggers gone), banned phrasing, missing references, a nested `SKILL.md`, malformed `evals.yaml`, and non-POSIX shell.
+It checks both trees: `skills/` published, `.agents/skills/` harness.
+
+Fails on: non-portable frontmatter keys, a harness skill missing `metadata.internal: true` or a published skill carrying it, a `name` that does not match its directory, an over-long description, a description containing angle brackets, an unquoted description containing `": "` or `" #"` (YAML reads a nested mapping or a comment, and the skill either never installs or installs with half its triggers gone), banned phrasing, missing references, a nested `SKILL.md`, malformed `evals.yaml`, and non-POSIX shell.
 
 Warns on: a description over 900 characters, a body over 500 lines, absolute paths, all-caps imperatives, a long reference with no contents list, references more than one level deep, unquoted YAML booleans in config, and a skill with references or scripts but no evals.
 
@@ -58,6 +68,8 @@ sh scripts/validate.sh /path/to/some/skills
 npx skills add . -g -y                # every skill
 npx skills add . -g -y -s my-skill    # just one
 ```
+
+Keep `-g` on both. Without it the CLI installs project-scoped, which copies `skills/*` into `.agents/skills/` and writes a `skills-lock.json`, burying the harness tree under the published skills. Nothing in this repository installs project-scoped; the harness tree is maintained by editing it.
 
 The CLI copies each skill into a canonical store, `~/.agents/skills/<name>`, then points every agent directory at that copy — `~/.claude/skills/<name>` becomes a symlink to it. Most agents read the canonical store directly.
 
