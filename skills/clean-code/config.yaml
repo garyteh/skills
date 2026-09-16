@@ -1,0 +1,18 @@
+# Configuration for the `clean-code` skill.
+# Holds the two thresholds an adopting team argues about, and nothing else.
+# Both values are usable as shipped, so there is nothing to fill in before
+# first use. Both are deliberately looser than Clean Code as written, because
+# the book's numbers produce fragments that cost a reader more than the long
+# function did.
+
+# Line count above which to ask whether the function does one thing. This is a
+# prompt to look, never a rule to split: a long function that does one thing
+# stays, and a short one that does three gets split. Counts body lines, not
+# signature or braces.
+function_max_lines: 50
+
+# Argument count above which to look for unrelated arguments or a flag hiding
+# two behaviours. At or below it, say nothing at all. Clean Code puts the limit
+# at 3; this is higher because related arguments are not a smell, and a
+# parameter object wrapping them can hide more than it reveals.
+function_max_arguments: 5
