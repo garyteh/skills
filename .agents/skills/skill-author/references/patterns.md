@@ -93,6 +93,6 @@ Scripts bundled with a skill talk to an agent, not a human. Make failures action
 
 Agents read every byte you return.
 
-- Resolve opaque identifiers into names. `owner: "Sarah Chen"` beats `owner_id: "c82ef910"`.
+- Resolve opaque identifiers into names. `owner: "Sherlock Holmes"` beats `owner_id: "c82ef910"`.
 - Drop fields nothing downstream consumes: MIME types, internal indices, system headers.
 - Where an agent sometimes needs identifiers and sometimes needs prose, offer both modes and default to the concise one.

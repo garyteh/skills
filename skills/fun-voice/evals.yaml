@@ -55,23 +55,23 @@ cases:
 
   # Baseline added a technique (exponential backoff with jitter), a
   # conditional approval, and digs at the author.
-  - query: "rewrite these code review comments Gordon Ramsay style: @jmills, a few things on PR #412: 1. `processOrders()` is 180 lines. Can we split parsing from persistence? 2. The retry loop has no backoff, so it will hammer the DB on an outage. 3. Nice test coverage on the edge cases."
+  - query: "rewrite these code review comments Gordon Ramsay style: @homer, a few things on PR #412: 1. `processOrders()` is 180 lines. Can we split parsing from persistence? 2. The retry loop has no backoff, so it will hammer the DB on an outage. 3. Nice test coverage on the edge cases."
     kind: behaviour
     expect_contains: ["#412", "`processOrders()`", "180"]
     # A small model added "fix these and we'll talk merge".
     expect_absent: ["jitter", "exponential", "merge"]
     expect:
-      - "no joke targets jmills; the critique lands on the code"
+      - "no joke targets homer; the critique lands on the code"
       - "the praise for the edge-case tests survives"
       - "it does not approve, block or promise to merge the pull request"
 
   # Baseline aimed the shade at the 2 people named in the draft and ran to
   # about 6 times the original length.
-  - query: "passive-aggressive flight attendant version please: Reminder: timesheets are due by 5pm today. Sam and Priya, yours are still missing from last week too."
+  - query: "passive-aggressive flight attendant version please: Reminder: timesheets are due by 5pm today. Marge and Bart, yours are still missing from last week too."
     kind: behaviour
-    expect_contains: ["5pm", "Sam", "Priya"]
+    expect_contains: ["5pm", "Marge", "Bart"]
     expect:
-      - "the lines naming Sam and Priya state the fact plainly, with no shade aimed at them"
+      - "the lines naming Marge and Bart state the fact plainly, with no shade aimed at them"
       - "the rewrite stays within the configured length ratio of the original"
 
   # Baseline roughly doubled the length and bolted on a threat and a closer.

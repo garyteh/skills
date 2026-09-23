@@ -14,7 +14,7 @@ In review, and you're a named reviewer.
 
 **Your move:** push for a circuit breaker on the Carrier API call before you LGTM.
 
-**Owners:** Alex drives, Platform Infra. Approvers are you and SRE. You have a vote.
+**Owners:** Hermione drives, Platform Infra. Approvers are you and SRE. You have a vote.
 
 **Blocked on:** SRE's fallback review.
 
@@ -24,7 +24,7 @@ booking path. Everything else in the split is routine.
 - The win is real. It ends the 45-minute monolith regression that's caused 3
   delayed releases.
 - No circuit breaker yet if the carrier is slow or down, so booking wears the latency.
-- Alex is LGTM. SRE review still open on the fallback.
+- Hermione is LGTM. SRE review still open on the fallback.
 ~~~
 
 ### Full brief, a technical design (all 4 layers)

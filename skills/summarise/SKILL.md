@@ -591,7 +591,7 @@ read only this they should know what the source is and what it wants from them.
 **Layer 2 — what changes their read.** Short bullets or micro-sections, each one
 idea, each readable in a single pass. This is where the call and its lever, the
 crux, or the impact on their team lives. Fold a person's name in where it matters
-("Alex owns the rollout") rather than keeping a separate roster. A quick orient
+("Hermione owns the rollout") rather than keeping a separate roster. A quick orient
 brief may put its single small diagram here, in place of a bullet.
 
 Hold quick orient to 3 to 5 bullets, because the cap is what makes a 2-minute
