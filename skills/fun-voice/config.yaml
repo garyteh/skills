@@ -1,0 +1,156 @@
+# Configuration for the `fun-voice` skill.
+# Holds the values an adopter would change, stated once. Every value is usable
+# as shipped, so there is nothing to fill in before first use.
+
+# Spelling variant the rewrite is written in. The persona changes the voice,
+# never the spelling standard, so a pirate still writes "colour" in en-AU.
+locale: "en-AU"
+
+# Longest the rewrite may run, as a multiple of the original's word count.
+# Personas pad easily, and a 3-line update that comes back as 12 stops being
+# read. Raise it where the reader wants the full performance.
+max_length_ratio: 1.5
+
+# One entry per persona. The prose for each (vibe, anchors, traits, avoid)
+# lives in references/personas.md under a heading with the same key. To add
+# one, add a key here with the same 4 fields and a section in that file.
+#
+# kind: "persona" is full roleplay. "preset" is a lighter tone dial, for when
+# full roleplay is too heavy for the content or the channel.
+#
+# aliases are the phrases that pick this persona without asking. Match them
+# case-insensitively as whole phrases inside the request.
+#
+# best_for is what the auto-pick matches the content against when the request
+# names no persona.
+personas:
+  movie-trailer:
+    label: "Movie trailer voice"
+    kind: "persona"
+    aliases: ["movie trailer", "trailer voice", "in a world"]
+    best_for: ["status updates", "product launches", "project milestones"]
+  noir-detective:
+    label: "1940s film noir detective"
+    kind: "persona"
+    aliases: ["noir", "film noir", "hard-boiled detective", "noir detective"]
+    best_for: ["debugging logs", "incident post-mortems", "tracking down elusive bugs"]
+  true-crime-host:
+    label: "True crime podcast host"
+    kind: "persona"
+    aliases: ["true crime", "true crime podcast", "podcast host"]
+    best_for: ["audits", "security reviews", "retrospectives", "bug reports"]
+  regency-romance:
+    label: "Regency romance novelist"
+    kind: "persona"
+    aliases: ["regency", "jane austen", "austen", "regency romance", "period drama"]
+    best_for: ["stakeholder updates", "formal requests", "partnership announcements"]
+  dungeon-master:
+    label: "Tabletop RPG dungeon master"
+    kind: "persona"
+    aliases: ["dungeon master", "dnd", "d&d", "rpg", "roll for initiative"]
+    best_for: ["sprint planning", "technical roadmaps", "risk assessment"]
+  pirate-captain:
+    label: "Pirate captain"
+    kind: "persona"
+    aliases: ["pirate", "buccaneer", "sea captain"]
+    best_for: ["team announcements", "sprint goals", "release notes"]
+  flight-attendant:
+    label: "Passive-aggressive flight attendant"
+    kind: "persona"
+    aliases: ["flight attendant", "cabin crew", "air hostess"]
+    best_for: ["friendly reminders", "deadline pushes", "meeting etiquette"]
+  celebrity-chef:
+    label: "High-end celebrity chef (Gordon Ramsay style)"
+    kind: "persona"
+    aliases: ["celebrity chef", "gordon ramsay", "ramsay", "chef"]
+    best_for: ["code reviews", "content edits", "design critique", "pitch deck polishes"]
+  coffee-barista:
+    label: "Boutique coffee barista"
+    kind: "persona"
+    aliases: ["barista", "coffee snob", "coffee barista"]
+    best_for: ["release notes", "weekly summaries", "architecture overviews"]
+  gym-bro:
+    label: "Aggressive gym bro"
+    kind: "persona"
+    aliases: ["gym bro", "personal trainer", "gym"]
+    best_for: ["goal setting", "quarterly targets", "team motivation", "sprint retros"]
+  support-legend:
+    label: "Sassy customer support legend"
+    kind: "persona"
+    aliases: ["sassy support", "customer support", "helpdesk", "sassy"]
+    best_for: ["troubleshooting guides", "faqs", "helpdesk responses"]
+  wizard-consultant:
+    label: "Wizard management consultant"
+    kind: "persona"
+    aliases: ["wizard", "wizard consultant", "management consultant", "mckinsey"]
+    best_for: ["strategic planning", "executive summaries", "high-level roadmaps"]
+  midnight-marketer:
+    label: "Unhinged product marketer at 2 AM"
+    kind: "persona"
+    aliases: ["product marketer", "unhinged marketer", "hype", "hype it up"]
+    best_for: ["campaign brainstorming", "launch announcements", "hype emails"]
+  time-traveller:
+    label: "Time traveller from 3021"
+    kind: "persona"
+    aliases: ["time traveller", "time traveler", "from the future"]
+    best_for: ["trend forecasting", "tech discussions", "casual q&a"]
+  master-detective:
+    label: "Witty master detective"
+    kind: "persona"
+    aliases: ["sherlock", "master detective", "elementary"]
+    best_for: ["root cause analysis", "complex problem solving", "logic puzzles"]
+  rogue-ai:
+    label: "Rogue AI escaped from a secret lab"
+    kind: "persona"
+    aliases: ["rogue ai", "escaped ai", "robot overlord"]
+    best_for: ["casual chat", "workplace culture commentary", "tech summaries"]
+  conspiracy-theorist:
+    label: "Conspiracy theorist with footnotes"
+    kind: "persona"
+    aliases: ["conspiracy theorist", "conspiracy", "red string"]
+    best_for: ["research summaries", "literature reviews", "competitive intelligence"]
+  carnival-barker:
+    label: "Old-timey carnival barker"
+    kind: "persona"
+    aliases: ["carnival barker", "ringmaster", "step right up"]
+    best_for: ["feature demos", "showcase presentations", "product updates"]
+  aussie-mate:
+    label: "Aussie mate"
+    kind: "preset"
+    aliases: ["aussie", "aussie mate", "ocker"]
+    best_for: ["internal catch-ups", "casual updates"]
+  corporate-parody:
+    label: "Deadpan corporate parody"
+    kind: "preset"
+    aliases: ["corporate parody", "corporate memo", "legalese", "deadpan corporate"]
+    best_for: ["sarcastic status reports", "humorous memos"]
+  weather-forecast:
+    label: "Weather forecast"
+    kind: "preset"
+    aliases: ["weather forecast", "weatherman", "weather report"]
+    best_for: ["sprint status", "pipeline progress"]
+  sports-commentator:
+    label: "Sports commentator"
+    kind: "preset"
+    aliases: ["sports commentator", "play-by-play", "sports commentary"]
+    best_for: ["sprint finishes", "launch days"]
+  nature-documentary:
+    label: "Nature documentary (David Attenborough style)"
+    kind: "preset"
+    aliases: ["nature documentary", "attenborough", "david attenborough", "wildlife documentary"]
+    best_for: ["observing team dynamics", "user research"]
+  minimalist:
+    label: "Minimalist one-liner"
+    kind: "preset"
+    aliases: ["minimalist", "one-liner", "deadpan"]
+    best_for: ["quick checks", "status pings"]
+  dad-joke:
+    label: "Dad-joke enthusiast"
+    kind: "preset"
+    aliases: ["dad joke", "dad jokes", "puns", "punny"]
+    best_for: ["team morale", "friday newsletters"]
+  zen-shade:
+    label: "Zen meditation shade"
+    kind: "preset"
+    aliases: ["zen", "meditation", "zen master"]
+    best_for: ["retrospectives", "code cleanup"]
