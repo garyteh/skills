@@ -1,0 +1,98 @@
+# Configuration for the `talking-points` skill.
+# Holds the values an adopter would change, stated once. Every value is usable
+# as shipped, so there is nothing to fill in before first use.
+
+# IANA zone for "today", business days and every date in the output. Empty
+# means the environment's own named zone, read at run time. Set a named zone
+# such as "Europe/London" only where the environment reports none or the wrong
+# one. Never an offset, because daylight saving breaks it.
+timezone: ""
+
+# Spelling variant the output is written in. Empty means the variant the
+# user's standing instructions or their own writing use. Set one, such as
+# "en-GB", to pin it.
+spelling: ""
+
+output:
+  # Most talking points in one list. Past this it stops being skimmable in
+  # the seconds before someone speaks. Cut items go on the Dropped line.
+  max_items: 5
+
+sources:
+  # Most links followed out of the named sources, 1 level deep. Enough to
+  # find a decision a source only points at, without wandering off.
+  max_linked_hops: 5
+
+# Date range modes offered when the range is not already given. Business days
+# run Monday to Friday. "since-last" anchors on the previous occurrence of the
+# meeting, which needs a reachable calendar; without one it falls back to the
+# audience's default_window.
+windows:
+  last-business-day:
+    label: "Last business day"
+    business_days: 1
+  past-week:
+    label: "Past week"
+    business_days: 5
+  past-2-weeks:
+    label: "Past 2 weeks"
+    business_days: 10
+  past-month:
+    label: "Past month"
+    business_days: 20
+  since-last:
+    label: "Since the last one"
+
+# One entry per audience. The prose for each (who is in the room, the goal,
+# tone, where signal hides, what to suppress) lives in references/audiences.md
+# under the same key. To add one, add a key here with the same 4 fields and a
+# section with the same 5 parts in that file.
+#
+# triggers are the phrases that pick this audience without asking. Match them
+# case-insensitively as whole phrases inside the request.
+audiences:
+  team-standup:
+    label: "Team standup"
+    description: "Your own team. What lands on them from outside their project and BAU work."
+    default_window: "last-business-day"
+    triggers:
+      - "standup"
+      - "stand-up"
+      - "team sync"
+      - "my team"
+  product-partner:
+    label: "Product manager catch-up"
+    description: "Your product partner. Scope, deadline and opportunity to discuss or decide."
+    default_window: "past-week"
+    triggers:
+      - "product manager"
+      - "my pm"
+      - "with my pm"
+      - "product partner"
+  manager:
+    label: "Manager catch-up"
+    description: "Your manager. What needs alignment, escalation, a decision or air cover."
+    default_window: "past-week"
+    triggers:
+      - "my manager"
+      - "my boss"
+      - "skip-level"
+      - "align with my manager"
+  peer-leads:
+    label: "Peer leads sync"
+    description: "Peer leads and product managers. Cross-team issues, dependencies and asks."
+    default_window: "past-week"
+    triggers:
+      - "leads sync"
+      - "leads meeting"
+      - "peer sync"
+      - "other leads"
+  report-1on1:
+    label: "1:1 with a report"
+    description: "Someone who reports to you. What to raise with them and what to watch for."
+    default_window: "past-2-weeks"
+    triggers:
+      - "my engineer"
+      - "my report"
+      - "1:1 with my direct"
+      - "catch up with my engineers"
