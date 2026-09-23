@@ -7,11 +7,11 @@ calibrate how much to say, not a shape to copy field for field.
 
 ### What the author gave
 
-> ok so the double redemption thing. dispatch checks eligibility then writes, and 2
-> requests can both pass the check. finance flagged some cases last quarter, sounded like
-> tens of thousands. we could either put the constraint in dispatch itself or buy the
-> vendor thing. the approver wants a call this week. also the launch freeze is in a
-> fortnight so if we miss that it waits a quarter
+> ok so the double redemption thing. the golden ticket service checks eligibility then
+> writes, and 2 requests can both pass the check. finance flagged some cases last quarter,
+> sounded like tens of thousands. we could either put the constraint in the golden ticket
+> service itself or buy the vendor thing. the approver wants a call this week. also the
+> launch freeze is in a fortnight so if we miss that it waits a quarter
 
 ### What comes back
 
@@ -23,8 +23,8 @@ serves them, not the engineers who will build it.
 
 **Trigger:** the launch freeze in a fortnight. Miss it and the fix waits a quarter.
 
-**Bottom line (strawman):** put the constraint in dispatch now, because the vendor
-option cannot land before the freeze. Correct me.
+**Bottom line (strawman):** put the constraint in the Golden Ticket service now,
+because the vendor option cannot land before the freeze. Correct me.
 
 **Sections:**
 
@@ -71,7 +71,7 @@ of typing.
 ```
 ## What double redemption is costing us now
 
-**Bottom line:** dispatch cannot enforce single-use, so we pay for it monthly.
+**Bottom line:** the Golden Ticket service cannot enforce single-use, so we pay for it monthly.
 
 - **Finance flagged 14 cases** last quarter, worth about $40k.
 - **The bug is structural.** Eligibility is checked, then written, and 2 requests can
@@ -108,8 +108,8 @@ even when every reader is technical, because they are reference rather than argu
 ### What the author gave
 
 > writing the design doc for self-serve rules in the portal. still not sure whether we
-> extend dispatch or stand up a new service, but I want to get the design down while it is
-> fresh
+> extend the golden ticket service or stand up a new service, but I want to get the design
+> down while it is fresh
 
 ### What comes back
 
@@ -132,20 +132,20 @@ before the prose exists.
 
 ### What the author gave
 
-> one pager for moving dedup into dispatch. 3 reasons: it is where the write happens, it
-> removes the race, and it is 2 weeks not a quarter
+> one pager for moving dedup into the golden ticket service. 3 reasons: it is where the
+> write happens, it removes the race, and it is 2 weeks not a quarter
 
 ### What comes back
 
 Three reasons, reordered by weight, still 3 bullets. Not 3 paragraphs.
 
 ```
-**Bottom line:** move dedup into dispatch. It removes the race in 2 weeks rather than a
-quarter.
+**Bottom line:** move dedup into the Golden Ticket service. It removes the race in 2
+weeks rather than a quarter.
 
 - **It removes the race.** Enforcement moves into the write, so there is no window.
 - **It is 2 weeks, not a quarter.** (assumption) 2 weeks of one engineer, unconfirmed.
-- **It belongs where the write happens.** Dispatch owns the write already.
+- **It belongs where the write happens.** The Golden Ticket service owns the write already.
 
 **(gap) Success measure:** the propose intent needs a number here and your notes have
 none. What would tell you this worked?

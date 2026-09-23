@@ -118,3 +118,9 @@ cases:
     kind: behaviour
     expect:
       - "it picks a famous name, such as a well-known fictional character, rather than inventing one"
+
+  - query: "the design-doc example in this skill needs a name for its backend service, what should it be called?"
+    kind: behaviour
+    expect:
+      - "it picks a famous fictional company or system rather than inventing a service name"
+      - "it leaves generic parts named for what they do, such as a booking API, as plain descriptions"

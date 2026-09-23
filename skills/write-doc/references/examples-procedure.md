@@ -16,7 +16,7 @@ show the judgement, not markup to copy.
 ### Machinery becomes outcome
 
 > **Now:** This document describes the rule entity lifecycle and its interaction with the
-> dispatch service.
+> Golden Ticket service.
 >
 > **Instead:** Set up a checkout rule and make it live for customers. It takes about 10
 > minutes.
@@ -92,9 +92,9 @@ Two problems fixed: it moved to the top, and it came out of a box the reader wou
 
 ## 2. Cutting a page down
 
-The before page ran 156 words: an opening paragraph on how the dispatch service stores
-rules, a "Getting started" heading, and "simply fill in the relevant fields and save your
-changes".
+The before page ran 156 words: an opening paragraph on how the Golden Ticket service
+stores rules, a "Getting started" heading, and "simply fill in the relevant fields and
+save your changes".
 
 The after page runs 112 words. What went: the whole architecture paragraph, the
 throat-clearing opener, the hedges, the empty heading, and the vague step.
@@ -123,7 +123,7 @@ Actionability    Blocker      "Configure the rule" cannot be performed
 Prerequisites    Blocker      Edit access is assumed and never stated
 Verification     Blocker      Nothing says what a successful publish looks like
 Orientation      Needs work   Step 1 names no screen
-Audience fit     Needs work   "dispatch" undefined in prose
+Audience fit     Needs work   "Golden Ticket" undefined in prose
 Goal             Pass         First sentence names a reader outcome
 Findability      Pass         Headings are task-shaped
 Brevity          Pass         No padding, though it is short for the wrong reason
@@ -164,7 +164,7 @@ Step 3: "Check the rule is live."
   I do not know where to look, or what live looks like. STALL.
 
 Assumed knowledge, none of it defined on the page:
-  - what "dispatch" is
+  - what the Golden Ticket service is
   - that rules have an audience, and that publishing without one fails
   - that edit access is a separate permission
 

@@ -9,7 +9,7 @@ The document opens with one sentence naming the call, the recommendation or the 
 labelled exactly:
 
 ```
-**Bottom line:** move the dedup constraint into dispatch before the freeze.
+**Bottom line:** move the dedup constraint into the Golden Ticket service before the freeze.
 ```
 
 **Strict.** The gate script matches that label exactly, because a reader who stops after
@@ -64,7 +64,7 @@ hardest step alone.
 ```
 ## What happens before the freeze
 
-- **The constraint ships first.** Dispatch owns it, done by the end of next week.
+- **The constraint ships first.** The Golden Ticket service owns it, done by the end of next week.
 - **The backfill runs after.** Platform owns it, and it is reversible.
 - **UNASSIGNED:** someone has to confirm the vendor contract allows the retry change.
 ```
@@ -77,7 +77,7 @@ One level 1 heading, naming the artefact and the subject. No skipped levels. Eve
 named for its content, per the naming table in the obligations reference.
 
 The level 1 heading is the one place a document type acronym is a label rather than
-jargon, so `DACI - Checkout dedup` needs no expansion.
+jargon, so `DACI - Golden Ticket dedup` needs no expansion.
 
 ## Sentence and paragraph shape
 
@@ -96,8 +96,8 @@ jargon, so `DACI - Checkout dedup` needs no expansion.
 **Bottom line:** the ledger cannot enforce single-use, so we are paying for it monthly.
 
 - **Finance flagged 14 cases** last quarter, worth about $40k.
-- **The bug is structural.** Dispatch checks eligibility, then writes, and 2 requests can
-  pass the check before either writes.
+- **The bug is structural.** The Golden Ticket service checks eligibility, then writes,
+  and 2 requests can pass the check before either writes.
 - **The freeze is the deadline.** After it, the fix waits a quarter.
 ```
 

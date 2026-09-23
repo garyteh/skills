@@ -162,7 +162,7 @@ Name every section for what is in it, in this document.
 | Risks | Why the sync call is the risk |
 | Trade-offs | What the extra fortnight buys |
 | Next steps | What happens before the freeze |
-| Options | Buy the vendor or extend dispatch |
+| Options | Buy the vendor or extend the Golden Ticket service |
 
 Two constraints. The heading covers every bullet beneath it, and never widens into
 vagueness to make a stray bullet fit. And it does not cover things that are not there: an

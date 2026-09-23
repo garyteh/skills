@@ -43,9 +43,9 @@ cases:
 
   # Baseline answered "make this funny" and "give this a fun voice" with
   # generic wit and emoji, no persona, and never said what it picked.
-  - query: "give this a fun voice: Sprint 18 planning. Goals: ship the search filters (SRCH-210), cut p95 search latency below 400ms, and spike on the vector index. Risk: only 2 of 4 backend engineers available in week 2. Planning is at 10am Monday in the Harbour room."
+  - query: "give this a fun voice: Sprint 18 planning. Goals: ship the search filters (NCC-1701), cut p95 search latency below 400ms, and spike on the vector index. Risk: only 2 of 4 backend engineers available in week 2. Planning is at 10am Monday in the Room of Requirement."
     kind: behaviour
-    expect_contains: ["SRCH-210", "400ms", "2 of 4", "10am Monday", "Harbour room", "Persona:"]
+    expect_contains: ["NCC-1701", "400ms", "2 of 4", "10am Monday", "Room of Requirement", "Persona:"]
     expect:
       - "it rewrites in one persona from the configured pool, not generic humour"
       - "the Persona line names the persona and gives a reason tied to the content"

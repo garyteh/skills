@@ -129,8 +129,8 @@ settle them before Step 2 phrases its intent options and before the spine's vote
 test. Take the first of these that answers it, then stop:
 
 1. **What the reader said this run.** "I'm a named approver", "does this land on
-   my team", "as the DRI for dispatch". The request often carries both. Take it
-   and say nothing.
+   my team", "as the DRI for Planet Express dispatch". The request often carries
+   both. Take it and say nothing.
 2. **What this session already establishes.** Whatever standing profile or
    instructions the environment puts in front of you, where they name their role,
    their team or the areas they own. This is the usual path.
@@ -581,7 +581,7 @@ line: no fixed section list, no fixed section count.
 **The title line.** Every brief opens with `## Summary: <title>`, where the title
 names the source in the reader's terms rather than copying its filename. "##
 Summary: retries on the booking webhook, behind a flag" beats "## Summary:
-DD-1284 v3 final". One brief, one title line, always prefixed. **Strict** — the Step 5
+Order 66 v3 final". One brief, one title line, always prefixed. **Strict** — the Step 5
 script parses this line, so the `## Summary: ` prefix is not a stylistic choice.
 
 **Layer 1 — the lead line.** The spine, directly under the title, with nothing

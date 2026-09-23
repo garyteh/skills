@@ -442,7 +442,7 @@ def gate_numerals(prose) -> Gate:
 def gate_acronyms(prose, allowed) -> Gate:
     seen, evidence = set(), []
     for n, line in prose:
-        # The level 1 heading names the artefact ("DACI - Checkout dedup"), so a
+        # The level 1 heading names the artefact ("DACI - Golden Ticket dedup"), so a
         # document type there is a label rather than undefined jargon.
         if re.match(r"^#\s+", line):
             continue

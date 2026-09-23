@@ -8,35 +8,35 @@ shape from `intents.md`.
 ### Quick orient, before a meeting (layers 1 and 2 only)
 
 ~~~
-## Summary: Dispatch Service design
-Proposal to pull dispatch out of the monolith into its own service.
+## Summary: Planet Express dispatch design
+Proposal to pull Planet Express dispatch out of the monolith into its own service.
 In review, and you're a named reviewer.
 
-**Your move:** push for a circuit breaker on the Carrier API call before you LGTM.
+**Your move:** push for a circuit breaker on the Pony Express API call before you LGTM.
 
-**Owners:** Hermione drives, Platform Infra. Approvers are you and SRE. You have a vote.
+**Owners:** Hermione drives, with the Planet Express crew. Approvers are you and SRE. You have a vote.
 
 **Blocked on:** SRE's fallback review.
 
-**What to scrutinise:** the design puts a synchronous Carrier API call on the
+**What to scrutinise:** the design puts a synchronous Pony Express API call on the
 booking path. Everything else in the split is routine.
 
 - The win is real. It ends the 45-minute monolith regression that's caused 3
   delayed releases.
-- No circuit breaker yet if the carrier is slow or down, so booking wears the latency.
+- No circuit breaker yet if Pony Express is slow or down, so booking wears the latency.
 - Hermione is LGTM. SRE review still open on the fallback.
 ~~~
 
 ### Full brief, a technical design (all 4 layers)
 
 ~~~
-## Summary: triggering the retry banner when a carrier booking fails
-Design for the frontend trigger that calls the Shipments Service once when a
+## Summary: triggering the retry banner when a Pony Express booking fails
+Design for the frontend trigger that calls the Planet Express API once when a
 booking fails, so the retry banner can fire. Rendering the banner is out of scope.
 
 **Your move:** set the `RejectionReason` value, or this slice cannot start.
 
-**The crux:** the frontend calls the Shipments Service directly on failure rather
+**The crux:** the frontend calls the Planet Express API directly on failure rather
 than waiting for a backend push, which is what keeps this first slice off the
 booking critical path.
 
@@ -50,11 +50,11 @@ booking critical path.
 **Diagram (AI-generated) — flowchart:**
 ```mermaid
 flowchart TD
-    rej["Carrier returns a rejection"] --> flip{"BOOKED to REJECTED?"}
+    rej["Pony Express returns a rejection"] --> flip{"BOOKED to REJECTED?"}
     flip -->|no| idle["No call, unchanged UX"]
     flip -->|yes| guard{"Flag on, not dismissed,<br/>not already fired?"}
     guard -->|no| idle
-    guard -->|yes| call["FE calls the Shipments Service"]
+    guard -->|yes| call["FE calls the Planet Express API"]
     call --> res{"Retry option available?"}
     res -->|yes| show["Render the retry banner"]
     res -->|"no, or error"| idle
@@ -71,7 +71,7 @@ websocket reconnects drop subscriptions, so a near-identical frontend fallback
 would be needed anyway.
 
 ### The unconfirmed enum is the only real blocker
-- The `RejectionReason` value is owned by the Carrier Integrations team and still
+- The `RejectionReason` value is owned by the Pony Express integration team and still
   unset. This blocks the first slice, not just the polish. (inferred)
 ~~~
 

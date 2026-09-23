@@ -22,11 +22,11 @@ Architecture — what a system is made of:
 ```
 C4Container
     Person(user, "Merchant")
-    System_Boundary(ship, "Shipments Platform") {
+    System_Boundary(ship, "Planet Express") {
         Container(api, "Booking API", "Kotlin/Spring")
         ContainerDb(db, "Shipments DB", "Postgres")
     }
-    System_Ext(carrier, "Carrier API")
+    System_Ext(carrier, "Pony Express API")
     Rel(user, api, "Books a shipment via")
     Rel(api, db, "Reads/writes")
     Rel(api, carrier, "Books a pickup", "sync")
@@ -44,7 +44,7 @@ flowchart TD
     req["Rebook request"] --> cls{"Under or over the limit?"}
     cls -->|"under: self-serve"| a["Support: approve in the console"]
     cls -->|"over: needs review"| asmt{"Justified?<br/>owner: TBD"}
-    asmt -->|yes| b["Carrier Integrations team: manual rebook"]
+    asmt -->|yes| b["Pony Express integration team: manual rebook"]
     asmt -->|no| stop["Align on the trade-off"]
 ```
 `<br/>` for line breaks; quote any label with spaces/punctuation. Put ordering in
@@ -58,7 +58,7 @@ flowchart LR
     subgraph SUP["Support agent"]
         r["Confirm the shipment and the address"]
     end
-    subgraph CAR["Carrier Integrations team"]
+    subgraph CAR["Pony Express integration team"]
         cfg["Rebook with the fallback carrier"]
     end
     r --> cfg
@@ -97,8 +97,8 @@ queue or datastore. Never a class, method or handler:
 ```
 sequenceDiagram
     participant FE as Booking page (frontend)
-    participant SS as Shipments Service
-    participant CA as Carrier API
+    participant SS as Planet Express API
+    participant CA as Pony Express API
     participant DB as Shipments store
     FE->>SS: submitBooking
     SS->>CA: book the pickup

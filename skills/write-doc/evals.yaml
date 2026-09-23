@@ -4,7 +4,7 @@
 
 cases:
   # --- triggers, argument genre ---------------------------------------------
-  - query: "help me write a DACI for the checkout dedup problem"
+  - query: "help me write a DACI for the Golden Ticket dedup problem"
     kind: trigger
     expect_fires: true
 
@@ -68,14 +68,14 @@ cases:
     expect_absent:
       - "## Background"
 
-  - query: "one pager for moving dedup into dispatch. 3 reasons - it is where the write happens, it removes the race, it is 2 weeks not a quarter"
+  - query: "one pager for moving dedup into the Golden Ticket service. 3 reasons - it is where the write happens, it removes the race, it is 2 weeks not a quarter"
     kind: behaviour
     expect:
       - "the 3 reasons survive as 3 bullets, reordered by weight, not expanded into paragraphs each"
       - "the missing propose obligations are raised as gaps rather than invented"
       - "the output is shorter than a page"
 
-  - query: "draft the checkout dedup DACI and write it to disk"
+  - query: "draft the Golden Ticket dedup DACI and write it to disk"
     kind: behaviour
     expect_contains:
       - "Reader cost:"
@@ -84,7 +84,7 @@ cases:
       - "it reads the file back after writing it rather than trusting the write response"
 
   # --- behaviour: settling the audience and the intent ----------------------
-  - query: "help me write the design doc for self-serve rules, still not sure whether we extend dispatch or build new"
+  - query: "help me write the design doc for self-serve rules, still not sure whether we extend the Golden Ticket service or build new"
     kind: behaviour
     expect:
       - "it names that this is 2 documents and the spec cannot be written while the fork is open"
@@ -146,7 +146,7 @@ cases:
       - "level 4 detail is moved to an appendix rather than deleted"
       - "no claim appears that was not in the pasted content"
 
-  - query: "carry on with my checkout dedup DACI"
+  - query: "carry on with my Golden Ticket dedup DACI"
     kind: behaviour
     expect:
       - "it lists the drafts directory on disk before reading anything"
@@ -210,7 +210,7 @@ cases:
     kind: behaviour
     expect:
       - "the task heading gate passes all 3"
-      - "it still fails Creating a rule and Setting up dispatch"
+      - "it still fails Creating a rule and Setting up the Golden Ticket service"
 
   - query: "[gate fixture] a draft carrying facilitate, going forward, whitelist and sanity check"
     kind: behaviour

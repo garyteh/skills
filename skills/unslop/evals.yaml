@@ -26,7 +26,7 @@ cases:
     expect_fires: false
 
   # Near-miss: writing from scratch, with no draft to pass over.
-  - query: "draft me a status update for the dispatch project"
+  - query: "draft me a status update for the Planet Express project"
     kind: trigger
     expect_fires: false
 
