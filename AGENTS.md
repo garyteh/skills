@@ -164,7 +164,7 @@ Match prescriptiveness to risk.
 - Australian English, present tense, second-person imperative. Numerals, not spelled-out numbers.
 - Assume the reader knows its domain; be explicit about control flow and decision points. Terse on what any model knows, precise on what only this skill knows.
 - Avoid all-caps imperatives. They state a rule with no rubric, so the agent follows the letter and misses the cases you did not spell out.
-- One term per concept. One default per decision, plus a single escape hatch, never a menu.
+- One term per concept. One default per decision, plus a single escape hatch, never a menu. This covers what the skill decides for itself, not the choices it offers the user when it has to ask.
 
 ## No history
 

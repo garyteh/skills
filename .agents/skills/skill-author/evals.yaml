@@ -68,3 +68,33 @@ cases:
     expect:
       - "it does not copy one tree over the other"
       - "it asks which tree the skill belongs in, since a skill lives in one or the other"
+
+  # Asking: take what the prompt and session give, then ask once for the rest.
+  - query: "create a skill called release-notes in skills/ that drafts release notes from pull requests merged since the last git tag, grouped by label. It should fire on 'write release notes' and 'draft the changelog'."
+    kind: behaviour
+    expect_contains:
+      - "name: release-notes"
+    expect:
+      - "it asks the user nothing, because the prompt gives the name, tree, purpose and trigger phrases"
+      - "it writes skills/release-notes/SKILL.md without first confirming the name or the tree"
+
+  - query: "write me a new skill for this repo"
+    kind: behaviour
+    expect:
+      - "it puts every question it still needs into a single turn, not one per step"
+      - "the tree question offers skills/ and .agents/skills/ as options, plus a free-text choice"
+      - "it asks nothing the repository already answers, such as where AGENTS.md is"
+
+  - query: "write a skill that drafts a status update for a stakeholder; it needs to know the audience and the date range"
+    kind: behaviour
+    expect:
+      - "the skill it writes takes the audience and the date range from the prompt or session context before asking for either"
+      - "the skill it writes asks for whatever is still missing in a single turn"
+      - "where the skill it writes asks, it offers options such as audiences from config, plus a free-text answer"
+
+  # The menu rule covers the skill's own decisions, so offering options is not a breach.
+  - query: "this skill offers 4 audience options when it asks the user, doesn't that break 'one default per decision, never a menu'?"
+    kind: behaviour
+    expect:
+      - "it says the menu rule covers what the skill decides for itself, not the options it offers the user when it asks"
+      - "it keeps the options rather than cutting them to one"

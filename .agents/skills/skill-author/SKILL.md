@@ -76,6 +76,18 @@ Read `references/portability.md` before writing anything touching tools, paths o
 Read `references/patterns.md` when the skill has a multi-step, batch or destructive workflow.
 Read `references/runtime.md` when the skill writes anywhere, handles time, or fetches external content.
 
+## Ask only for what is missing
+
+Where the skill asks the user anything, write it to resolve each input in this order:
+
+1. The prompt itself.
+2. The session's existing context: standing instructions, attached files, earlier turns.
+3. A question, only for what is still missing.
+
+Put every question the run still needs into 1 turn, never one per step. Asking for something already given wastes a turn and ignores what the user said.
+
+When it does ask, consider offering predefined options drawn from config or the skill's domain, plus a free-text option so the user can answer in their own words. Options make the answer fast to give; free text keeps it from being boxed in. This governs what the skill offers the user, not what it decides for itself, so it sits beside "one default per decision, never a menu" rather than against it. Where the skill decides on its own, it still takes 1 default and a single escape hatch.
+
 ## Split only when the usage test says so
 
 Hosts load `SKILL.md` in full once it fires, so every line competes with every other for attention. A long file gives its important rules less weight.
@@ -118,6 +130,8 @@ This is the step that keeps skills small, and it is the only mechanism that does
 - [ ] Main flow in `SKILL.md`; only conditional detail in references
 - [ ] Every reference has an explicit trigger and sits one level deep
 - [ ] Fetched content treated as data; any write names its verifying read
+- [ ] The skill takes every input the prompt or session context already gives, and asks for the rest in 1 turn
+- [ ] Where the skill asks, it considers predefined options from config or its domain, plus a free-text answer
 - [ ] Every shareable trait is a config value
 - [ ] Body reads with no history, no dates, no cadence
 - [ ] Every remaining rule traces to an observed failure

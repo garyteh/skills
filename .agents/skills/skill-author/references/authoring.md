@@ -63,7 +63,7 @@ Give a reference over 200 lines a contents list, so a reader who stops early sti
 - Assume the reader knows its domain. Never explain what any model already knows.
 - Be explicit about control flow and decision points even so. Terse on general knowledge, precise on what only this skill knows: that is the resolution of "assume competence" against "write for the weakest model that will run it".
 - One term per concept. Never alternate between "field", "box" and "element" for the same thing.
-- One default per decision, plus a single escape hatch. Not a menu.
+- One default per decision the skill makes, plus a single escape hatch. Not a menu.
 - State the rule, then the reason. All-caps imperatives give a rule with no rubric, so the agent follows the letter and misses the cases you did not spell out. Reserve bare imperatives for fragile steps.
 - Give any skill with real run history a Known Gotchas section listing concrete failure modes actually seen. On a mature skill this is usually its most valuable content.
 - Use a template for output shape and two or three input/output pairs for style. Templates show the skeleton, examples calibrate the voice.
