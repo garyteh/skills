@@ -98,6 +98,7 @@ Read `references/portability.md` before writing anything that touches tools, pat
 Every skill here ships publicly, so the bundle carries no trace of where it came from or who wrote it. The config test asks whether a stranger could use the skill unchanged; this asks whether they could tell it was not written for them.
 
 - Name no employer, product, team, meeting, channel or person other than a skill's own subject, in `SKILL.md`, the description, references, config or script comments. Naming the external service the skill talks to is still right: the point is which system to hit, not whose install it is.
+- A person passes that test when any stranger would recognise the name as a style or cultural reference: a celebrity chef, a documentary narrator, an author, a consultancy's house style. A fictional name in an example passes too. A private individual, a colleague, the person running the skill or anyone from the author's employer fails, because the name shows who the skill was written for. Evoke the style, never speak as the person, and attribute no invented quote to a real one.
 - Name no internal identifier either: board and project keys, hostnames, tenant ids, internal URLs, user-specific paths, team-specific folder names.
 - Where a real value is needed, ship a neutral default in config, or ship the key empty with a comment showing the shape. Say which one it is, so nobody adopting the skill mistakes a placeholder for a working value.
 
@@ -207,6 +208,6 @@ Check these by reading:
 - [ ] Rules carry their reason wherever judgement is needed
 - [ ] Fetched content is treated as data, and any write names its verifying read
 - [ ] Every shareable trait is a config value
-- [ ] Nothing names an employer, product, team, person or internal identifier
+- [ ] Nothing names an employer, product, team or internal identifier, and any person named is the subject, a household name or fictional
 - [ ] No connector shape and no sibling skill is required for the skill to run
 - [ ] Every rule traces to an observed failure

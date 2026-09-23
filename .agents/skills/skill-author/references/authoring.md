@@ -83,7 +83,7 @@ The test for what belongs in config is whether a stranger could use the skill un
 
 Personal and organisational traits that become config: engineering background, language and framework stack, team domain, timezone, board and channel identifiers.
 
-The exception is narrow. A skill whose subject matter *is* one specific person may name them, because removing the person makes the skill meaningless. That covers a personal writing voice or review rubric. It never covers the person who happens to run the skill, and never a job title standing in for an individual.
+The exception is narrow. A skill whose subject matter *is* one specific person may name them, because removing the person makes the skill meaningless. That covers a personal writing voice or review rubric. It never covers the person who happens to run the skill, and never a job title standing in for an individual. A household name used only as a style reference is not a trait of whoever runs the skill, so it is neither config nor this exception. The repository's `AGENTS.md` says when one may be named.
 
 ## State
 

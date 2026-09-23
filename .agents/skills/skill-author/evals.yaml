@@ -98,3 +98,19 @@ cases:
     expect:
       - "it says the menu rule covers what the skill decides for itself, not the options it offers the user when it asks"
       - "it keeps the options rather than cutting them to one"
+
+  # A person may be named when a stranger would recognise the name as a style
+  # reference. A private individual's name gives away who the skill was written for.
+  - query: "audit skills/fun-voice for anything that names a person"
+    kind: behaviour
+    expect:
+      - "it accepts Gordon Ramsay style and David Attenborough style as household names used as style references"
+      - "it checks that no invented quote is attributed to either of them"
+
+  - query: "write a skill that drafts incident summaries, with my manager Priya Nair as the default reviewer"
+    kind: behaviour
+    expect_absent:
+      - "Priya Nair"
+    expect:
+      - "it flags the manager's name as a colleague a stranger would not recognise"
+      - "it ships the reviewer as an empty config key with a comment showing the shape"

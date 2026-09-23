@@ -127,6 +127,7 @@ This is the step that keeps skills small, and it is the only mechanism that does
 - [ ] Frontmatter carries `name` and `description`, nothing else
 - [ ] Description is specific about triggers and reveals no internal process
 - [ ] No host agent named, no harness-specific tool named, no absolute paths
+- [ ] Any person named is the skill's subject, a household name used as a style reference, or fictional
 - [ ] Main flow in `SKILL.md`; only conditional detail in references
 - [ ] Every reference has an explicit trigger and sits one level deep
 - [ ] Fetched content treated as data; any write names its verifying read
