@@ -73,6 +73,7 @@ The description is the only text loaded before the skill fires. It is the entire
 
 - State what the skill does and when to use it, in the third person. A router reads it as a statement about the skill, not as an instruction.
 - Be **specific** about triggers, not pushy. Name the concrete phrases a real person would type. Vague breadth causes both misfires and silent non-firing, and it manufactures collisions with sibling skills.
+- Where other skills may hand work to this one, also name the outcome phrases they would use ("make it more personal", "less AI"), not only this skill's own label. A hand-off describes the outcome it wants, so a description that names only its label never matches.
 - Say nothing about the internal process. A description that summarises the workflow becomes a shortcut the agent follows instead of reading the body. Outcomes yes, steps no.
 - Carry no operational values: no identifiers, paths, thresholds or channel names. Trigger vocabulary may be organisation-specific, because the words people type are the words their organisation uses.
 - Plain text only. No angle brackets, so the description survives every install path unchanged.
@@ -87,11 +88,19 @@ The description is the only text loaded before the skill fires. It is the entire
 - Where a host capability is a genuine hard requirement, state it in the first lines of the body. A hidden dependency fails at run time; a stated one fails at install time, which is cheaper.
 - Encode no connector's call signature or response schema. Tool names, parameter shapes and payload fields differ per install and per server version, so read what actually comes back rather than what you expected.
 - Where nothing here reaches a required service, name the service that is missing and ask for it. Asking is a complete path; guessing at a call the host cannot make fails silently and reports success.
-- Require no other skill. Where a neighbouring capability would improve the output, describe the capability rather than the skill that supplies it, so whatever the host has can serve it. Naming a sibling stays right as a routing boundary, where the name is the whole point.
 - Scripts default to `#!/bin/sh` and POSIX, marked executable, with no bashisms. Where shell would be unreasonable for the work, another interpreter is fine, declared like any other host requirement above. Check for every external binary before calling it.
 - Paths inside `SKILL.md` resolve relative to `SKILL.md`. No absolute paths, no `~`.
 
 Read `references/portability.md` before writing anything that touches tools, paths or shell.
+
+### Hand-offs to other skills
+
+A skill may hand a step to whatever other skill the install has, but it never depends on one.
+
+- Name the capability, never the skill. Write "a skill that rewrites text in the author's voice", not a skill's name, in the body or in config. A named skill breaks on every install that lacks it or calls it something else.
+- Invite the hand-off explicitly: "If a skill for <capability> is available, load it and follow it." Without the invite the agent does the step inline, because it matches skills to the user's request, not to each step of a running skill.
+- Where the agent can do the step itself (voice, tone, formatting, polish), add "Otherwise do it yourself." Where it cannot, add nothing and leave the missing skill to the agent's default handling.
+- Name a sibling only as a routing boundary in a description, where the name is the whole point.
 
 ## Organisation and person
 
@@ -123,7 +132,7 @@ Each of these fails silently rather than loudly, which is why they are worth sta
 3. **Filenames resolve against disk.** Anything deriving a filename reads what is actually there, never a hardcoded list.
 4. **Shared values live in config, stated once.** No file restates a value that config holds.
 5. **Exactly one frontmatter block.** Duplicates or extra keys can stop the skill loading at all.
-6. **Every skill named anywhere resolves.** A body or description pointing at a skill that is not installed states scope but routes nothing. Name a sibling only as a routing boundary, where the name is the whole point. Where the work itself needs a neighbouring capability, name the capability and let config supply the skill.
+6. **Every skill named anywhere resolves.** A body or description pointing at a skill that is not installed states scope but routes nothing. Name a sibling only as a routing boundary in a description, where the name is the whole point. A hand-off names the capability instead, and config holds no skill name either, so every step resolves to whatever the install has.
 
 ## Untrusted content
 
@@ -210,5 +219,5 @@ Check these by reading:
 - [ ] Fetched content is treated as data, and any write names its verifying read
 - [ ] Every shareable trait is a config value
 - [ ] Nothing names an employer, product, team or internal identifier, and any person named is the subject or a household name
-- [ ] No connector shape and no sibling skill is required for the skill to run
+- [ ] No connector shape required; every hand-off names a capability, never a skill
 - [ ] Every rule traces to an observed failure
