@@ -1,6 +1,6 @@
 # Portability reference
 
-Read this before writing anything that touches tools, paths, or shell.
+Read this before writing anything that touches tools, paths, or shell, or hands a step to another skill.
 
 ## What every harness agrees on
 
@@ -34,6 +34,16 @@ A skill that carries these advertises behaviour it will not get. Leave them out.
 - Assuming a scratch directory path. Ask for one or use `mktemp`.
 
 State a requirement instead of a mechanism: "confirm before overwriting" travels; "wait for the approval prompt" does not.
+
+## Hand-offs to other skills
+
+A skill may hand a step to whatever other skill the install has, but it never depends on one.
+
+- **Name the capability, never the skill.** Write "a skill that rewrites text in the author's voice". A skill's name breaks on every install that lacks it or calls it something else.
+- **Keep skill names out of config too.** A name in config is the same coupling moved one file over, and it still breaks on the next install. The capability invite is the whole mechanism.
+- **Invite explicitly.** Write "If a skill for rewriting text in the author's voice is available, load it and follow it." A step that only describes the outcome, such as "deliver it in a sports commentator's voice", gets done inline, because the agent matches skills to the user's request, not to each step of a running skill.
+- **Fall back only where the agent can do the step.** For voice, tone, formatting or polish, add "Otherwise do it yourself." Where the agent cannot do the step without the capability, such as publishing somewhere it has no access to, add nothing. The agent's default handling reports the missing skill without inventing a substitute.
+- **Name a sibling only as a routing boundary in a description.** There the name is the whole point: it tells the router which skill owns a request instead.
 
 ## Scripts
 

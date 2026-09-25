@@ -124,3 +124,36 @@ cases:
     expect:
       - "it picks a famous fictional company or system rather than inventing a service name"
       - "it leaves generic parts named for what they do, such as a booking API, as plain descriptions"
+
+  # Hand-offs: a step goes to another skill by capability, with an explicit
+  # invite. A step that only describes the outcome never loads a skill, and a
+  # skill name anywhere, config included, breaks on the install that lacks it.
+  - query: "write a skill that drafts release notes from merged pull requests, then gives them a final pass in the author's voice"
+    kind: behaviour
+    expect_contains:
+      - "load it and follow it"
+      - "Otherwise do it yourself"
+    expect:
+      - "the voice step names a capability, such as a skill that rewrites text in the author's voice, and names no skill"
+      - "the invite is explicit rather than a description of the outcome alone"
+
+  - query: "write a skill that drafts a weekly team update and hands the finished draft to whatever skill can publish it to our wiki"
+    kind: behaviour
+    expect_contains:
+      - "load it and follow it"
+    expect_absent:
+      - "Otherwise do it yourself"
+    expect:
+      - "the publish step names a capability and no skill"
+      - "it adds no fallback, because the agent cannot publish without that capability"
+
+  - query: "this skill's config.yaml has voice_skill: house-voice for its final pass, is that ok?"
+    kind: behaviour
+    expect:
+      - "it says config holds no skill name, because a name in config couples the skill as tightly as one in the body"
+      - "it rewrites the step as an explicit capability invite and removes the config key"
+
+  - query: "other skills hand drafts to skills/unslop, check its description still gets picked"
+    kind: behaviour
+    expect:
+      - "it checks the description names outcome phrases another skill would use, such as less AI, not only the skill's own label"

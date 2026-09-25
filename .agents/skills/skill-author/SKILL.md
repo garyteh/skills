@@ -68,11 +68,12 @@ Then write the body against the contract:
 - Lead with the rule, then give the reason.
 - Present tense, second-person imperative, Australian English.
 - Name no host agent and no harness-specific tool. Write "search the codebase".
+- Hand a step to another skill by capability, never by name, and invite it explicitly. A named skill breaks on every install that lacks it or calls it something else.
 - Keep paths relative to `SKILL.md`.
 - Write as though the skill has always been this way. No history, no dates, no cadence.
 
 Read `references/authoring.md` for description craft, splitting, config and state.
-Read `references/portability.md` before writing anything touching tools, paths or shell.
+Read `references/portability.md` before writing anything touching tools, paths or shell, or handing a step to another skill.
 Read `references/patterns.md` when the skill has a multi-step, batch or destructive workflow.
 Read `references/runtime.md` when the skill writes anywhere, handles time, or fetches external content.
 
@@ -127,6 +128,7 @@ This is the step that keeps skills small, and it is the only mechanism that does
 - [ ] Frontmatter carries `name` and `description`, nothing else
 - [ ] Description is specific about triggers and reveals no internal process
 - [ ] No host agent named, no harness-specific tool named, no absolute paths
+- [ ] Every hand-off names a capability and invites it explicitly, and no config key holds a skill name
 - [ ] Any person named is the skill's subject or a household name, and no example invents one
 - [ ] Main flow in `SKILL.md`; only conditional detail in references
 - [ ] Every reference has an explicit trigger and sits one level deep

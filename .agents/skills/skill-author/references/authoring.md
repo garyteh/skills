@@ -19,6 +19,8 @@ Budget it for triggers first. A description that spends its length describing ca
 
 **Specific beats broad.** Name the phrases a real person types. "Use when creating a new skill, editing an existing SKILL.md, or checking one for portability" routes; "use for skill-related tasks" does not. Broad wording fails in both directions at once: it misses the specific request whose words it never named, and it grabs requests belonging to a sibling.
 
+**Outcome phrases for hand-off targets.** Where other skills may hand work to this one, name the outcomes they would ask for, such as "make it more personal" or "less AI", not only this skill's own label. A hand-off describes the outcome it wants, so a description that names only its label never matches.
+
 **Third person.** The router reads the description as a statement about the skill, not as an instruction to follow.
 
 **No process.** Describing the workflow gives the agent a summary it can act on instead of reading the body. State the outcome, never the steps.
