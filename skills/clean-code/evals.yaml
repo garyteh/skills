@@ -24,6 +24,11 @@ cases:
     kind: trigger
     expect_fires: true
 
+  # Outcome phrases another skill uses when it hands code over.
+  - query: "make this code more readable"
+    kind: trigger
+    expect_fires: true
+
   # Near-miss. Correctness review is the territory of a dedicated code review,
   # and claiming it here puts two skills on one request.
   - query: "review this PR for bugs"

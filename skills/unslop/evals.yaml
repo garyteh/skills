@@ -20,6 +20,11 @@ cases:
     kind: trigger
     expect_fires: true
 
+  # Outcome phrases another skill uses when it hands a finished draft over.
+  - query: "tighten this up and polish the prose before it goes out"
+    kind: trigger
+    expect_fires: true
+
   # Near-miss: condensing a source, not rewriting a draft.
   - query: "summarise this Confluence page for me"
     kind: trigger
