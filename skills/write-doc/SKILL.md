@@ -555,10 +555,10 @@ do; one told nothing has to read the whole page to find out.
 No handoff while any finding lacks a disposition, or while a Blocker-class gap sits inside
 a step. Say which, and offer to resolve it now.
 
-Then name what is still an assumption, and where `handoff.voice_pass` in `config.yaml`
-names a skill that is actually available, offer it as an optional next pass for voice.
-Where it is empty, say nothing about it: the drafting rules above already covered the tells
-a draft can control. This skill structures and drafts; it does not own anyone's voice.
+Then name what is still an assumption. If a skill for rewriting a draft in the author's
+own voice is available, load it and follow it as the final pass. Add no voice of your own
+where none is available: the drafting rules above already covered the tells a draft can
+control. This skill structures and drafts; it does not own anyone's voice.
 
 ## Traps
 

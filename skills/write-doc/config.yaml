@@ -237,11 +237,3 @@ gates:
   # Most bold spans allowed in an argument doc outside bullet anchors and
   # structural labels. Past this, bold stops marking anything out.
   bold_span_budget: 8
-
-handoff:
-  # Skill that rewrites a finished draft into the author's voice, or strips the
-  # machine-written tells a drafting pass cannot reach. Install-specific, so it
-  # is named here rather than in the skill body, and empty is a complete
-  # configuration rather than a degraded one: the drafting rules already cover
-  # the tells a draft can control, and Step 7 simply offers no follow-up pass.
-  voice_pass: ""
